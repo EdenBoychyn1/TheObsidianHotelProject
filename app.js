@@ -8,7 +8,7 @@ const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
 const index_1 = __importDefault(require("./Routes/index"));
-const Routes_1 = __importDefault(require("./Routes/"));
+const users_1 = __importDefault(require("./Routes/users"));
 const app = (0, express_1.default)();
 app.set("views", path_1.default.join(__dirname, "Views"));
 app.set("view engine", "ejs");
@@ -19,7 +19,7 @@ app.use((0, cookie_parser_1.default)());
 app.use(express_1.default.static(path_1.default.join(__dirname, "Client")));
 app.use(express_1.default.static(path_1.default.join(__dirname, "node_modules")));
 app.use("/", index_1.default);
-app.use("/users", Routes_1.default);
+app.use("/users", users_1.default);
 app.use(function (req, res, next) {
     next(createError(404));
 });

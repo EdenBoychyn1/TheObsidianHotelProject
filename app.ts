@@ -5,11 +5,13 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 
 import indexRouter from "./Routes/index";
-import usersRouter from "./Routes/";
+import usersRouter from "./Routes/users";
 import createHttpError from "http-errors";
 
 const app = express();
 
+console.log(`Directory Name --> ${__dirname}`);
+console.log(`File Name --> ${__filename}`);
 // view engine setup
 app.set("views", path.join(__dirname, "Views"));
 app.set("view engine", "ejs");
