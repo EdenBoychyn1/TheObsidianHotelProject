@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rooms</title>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    />
+    <!-- CSS Section  -->
+    <link rel="stylesheet" href="./Content/app.css" />
+
+    <!--Scripts that wil trigger before the page loads-->
+  </head>
+  <body>
+    <!--Main Header-->
+    <header></header>
+    <div class="container">
+      <h1><i class="fa-solid fa-hotel"></i> Rooms</h1>
+    </div>
+
+    <div id="slider">
+      <input type="radio" name="slider" id="slide1" checked />
+      <input type="radio" name="slider" id="slide2" />
+      <input type="radio" name="slider" id="slide3" />
+      <input type="radio" name="slider" id="slide4" />
+      <div id="slides">
+        <div id="overflow">
+          <div class="inner">
+            <div class="slide slide_1">
+              <div class="slide-content">
+                <ul class="room-details">
+                  <img
+                    src="./Server/Images/andrew-neel-B4rEJ09-Puo-unsplash.jpg"
+                    alt=""
+                  />
+                  <div>
+                    <h3 class="room-heading">Twin Room with Beach View</h3>
+                    <p class="room-text">
+                      A private rejuvenating retreat that offers relaxing
+                      amenities as well as a beach front view.
+                    </p>
+                    <li>
+                      <i class="fa-regular fa-square"></i>
+                      <span>250 – 350 sq/ft</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-umbrella-beach room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Beach View</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-bed room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Twin Bed</span>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+            <div class="slide slide_2">
+              <div class="slide-content">
+                <ul class="room-details">
+                  <img
+                    src="./Server/Images/rhema-kallianpur-uocSnWMhnAs-unsplash.jpg"
+                    alt=""
+                  />
+
+                  <h3>Double Room with Beach View</h3>
+                  <p class="room-text">
+                    A private rejuvenating retreat that offers relaxing
+                    amenities as well as a beach front view.
+                  </p>
+
+                  <div class="room-highlights">
+                    <li>
+                      <i class="fa-regular fa-square"></i>
+                      <span>250 – 350 sq/ft</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-umbrella-beach room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Beach View</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-bed room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Double Bed</span>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+            <div class="slide slide_3">
+              <div class="slide-content">
+                <ul class="room-details">
+                  <img
+                    src="./Server/Images/christopher-jolly-GqbU78bdJFM-unsplash.jpg"
+                    alt=""
+                  />
+                  <div>
+                    <h3>Queen Room with Balcony & Beach View</h3>
+                    <p class="room-text">
+                      A private rejuvenating retreat that offers relaxing
+                      amenities as well as a beach front view.
+                    </p>
+                    <li>
+                      <i class="fa-regular fa-square"></i>
+                      <span>250 – 350 sq/ft</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-umbrella-beach room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Beach View</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-bed room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Queen Bed</span>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+            <div class="slide slide_4">
+              <div class="slide-content">
+                <ul class="room-details">
+                  <img
+                    src="./Server/Images/anna-sullivan-f7fZg21B3ms-unsplash.jpg"
+                    alt=""
+                  />
+                  <div>
+                    <h3>King Ensuite with Balcony & Beach view</h3>
+                    <p class="room-text">
+                      A private rejuvenating retreat that offers relaxing
+                      amenities as well as a beach front view.
+                    </p>
+                    <li>
+                      <i class="fa-regular fa-square"></i>
+                      <span>250 – 350 sq/ft</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-umbrella-beach room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>Beach View</span>
+                    </li>
+                    <li>
+                      <i
+                        class="fa-solid fa-bed room-icon"
+                        style="color: #311a22"
+                      ></i>
+                      <span>King Bed</span>
+                    </li>
+                  </div>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="bullets">
+        <label for="slide1"></label>
+        <label for="slide2"></label>
+        <label for="slide3"></label>
+        <label for="slide4"></label>
+      </div>
+    </div>
+    <!--Footer-->
+    <footer></footer>
+
+    <!--Scripts-->
+    <script src="./Scripts/app.js"></script>
+    <!--Scripts-->
+  </body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "FirstName": "Eden",
+      "LastName": "Boychyn",
+      "UserName": "Eden_Boychyn@hotmail.com",
+      "SecurityLevel": "front_desk_agent",
+      "EmailAddress": "Eden_Boychyn@hotmail.com",
+      "Password": "123456123456"
+    },
+    {
+      "FirstName": "John",
+      "LastName": "Smith",
+      "UserName": "John_Smith@hotmail.com",
+      "SecurityLevel": "guest",
+      "EmailAddress": "John_Smith@hotmail.com",
+      "Password": "123456123456"
+    },
+    {
+      "FirstName": "Admin",
+      "LastName": "Admin",
+      "UserName": "Admin@hotmail.com",
+      "SecurityLevel": "front_desk_agent",
+      "EmailAddress": "Admin@hotmail.com",
+      "Password": "123456123456"
+    }
+  ]
+}

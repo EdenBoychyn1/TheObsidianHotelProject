@@ -1,0 +1,55 @@
+{
+  "guests": [
+    {
+      "FirstName": "Eden",
+      "LastName": "Boychyn",
+      "UserName": "Eden_Boychyn@hotmail.com",
+      "SecurityLevel": "front_desk_agent",
+      "EmailAddress": "Eden_Boychyn@hotmail.com",
+      "Password": "123456123456",
+      "UnitNumber": "",
+      "StreetNumber": "25",
+      "StreetName": "Cascade Boulevard",
+      "City": "Belleville",
+      "Province": "Ontario",
+      "Country": "Canada",
+      "PostalCode": "K8P4R6",
+      "DateCreated": "1708909725738",
+      "LastUpdate": "1708909725738"
+    },
+    {
+      "FirstName": "John",
+      "LastName": "Smith",
+      "UserName": "John_Smith@hotmail.com",
+      "SecurityLevel": "guest",
+      "EmailAddress": "John_Smith@hotmail.com",
+      "Password": "123456123456",
+      "UnitNumber": "",
+      "StreetNumber": "419",
+      "StreetName": " King St W",
+      "City": ", Oshawa",
+      "Province": "Ontario",
+      "Country": "Canada",
+      "PostalCode": "L1J2K5",
+      "DateCreated": "1708909725738",
+      "LastUpdate": "1708909725738"
+    },
+    {
+      "FirstName": "Admin",
+      "LastName": "Admin",
+      "UserName": "Admin@hotmail.com",
+      "SecurityLevel": "front_desk_agent",
+      "EmailAddress": "Admin@hotmail.com",
+      "Password": "123456123456",
+      "UnitNumber": "",
+      "StreetNumber": "2000",
+      "StreetName": "Simcoe Street North",
+      "City": "Oshawa",
+      "Province": "Ontario",
+      "Country": "Canada",
+      "PostalCode": "L1G0C5",
+      "DateCreated": "1708909725738",
+      "LastUpdate": "1708909725738"
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reservations</title>
+    <link
+      rel="stylesheet"
+      href="./node_modules/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="./node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+    />
+    <!-- CSS Section  -->
+    <link rel="stylesheet" href="./Content/app.css" />
+
+    <!--Scripts that wil trigger before the page loads-->
+  </head>
+  <body>
+    <!--Main Header-->
+    <header></header>
+
+    <main class="container">
+      <!-- <div class="hero-text-box"> -->
+      <h1 class="primary-heading">
+        <i class="fa-solid fa-hotel"></i> Reservations
+      </h1>
+      <div class="row justify-content-lg-center g-3">
+        <form class="row g-3">
+          <div class="col-12">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="gridCheck" />
+              <label class="form-check-label" for="gridCheck">
+                Are you the guest?
+              </label>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <label for="inputReservationFirstName" class="form-label"
+              >Guest First Name
+            </label>
+            <input
+              type="text"
+              placeholder="First Name"
+              class="form-control"
+              id="inputReservationFirstName"
+            />
+          </div>
+
+          <div class="col-md-6">
+            <label for="inputReservationLastName" class="form-label"
+              >Guest Last Name</label
+            >
+            <input
+              type="text"
+              placeholder="Last Name"
+              class="form-control"
+              id="inputReservationLastName"
+            />
+          </div>
+          <div class="col-10">
+            <label for="inputAddress" class="form-label">Billing Address</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputAddress"
+              placeholder="1234 Main St"
+            />
+          </div>
+          <div class="col-2">
+            <label for="inputUnitNumber" class="form-label">Billing Unit Number</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputUnitNumber"
+              placeholder="Unit 200"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="inputCity" class="form-label">Billing City</label>
+            <input type="text" class="form-control" id="inputCity" />
+          </div>
+          <div class="col-md-2">
+            <label for="inputProvince" class="form-label">Billing Province</label>
+            <select id="inputProvince" class="form-select">
+              <option selected>Alberta</option>
+              <option>British Columbia</option>
+              <option>Manitoba</option>
+              <option>New Brunswick</option>
+              <option>Newfoundland and Labrador</option>
+              <option>Northwest Territories</option>
+              <option>Nova Scotia</option>
+              <option>Nunavut</option>
+              <option>Ontario</option>
+              <option>Prince Edward Island</option>
+              <option>Quebec</option>
+              <option>Saskatchewan</option>
+              <option>Yukon</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="inputCountry" class="form-label">Country</label>
+            <select id="inputCountry" class="form-select">
+              <option selected>Canada</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="inputPostalCode" class="form-label">Billing Postal Code</label>
+            <input type="text" class="form-control" id="inputPostalCode" />
+          </div>
+
+          <div class="col-md-3">
+            <label for="inputCheckInDate" class="form-label"
+              >Check In Date:</label
+            >
+            <input type="date" class="form-control" id="inputCheckInDate" />
+          </div>
+          <div class="col-md-3">
+            <label for="inputCheckOutDate" class="form-label"
+              >Check Out Date:</label
+            >
+            <input type="date" class="form-control" id="inputCheckOutDate" />
+          </div>
+          <div class="col-md-2">
+            <label for="inputPax" class="form-label">Number of Guests</label>
+            <select id="inputPax" class="form-select">
+              <option>1</option>
+              <option selected>2</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="inputRoomType" class="form-label">Room Type:</label>
+            <select id="inputRoomType" class="form-select">
+              <option>Twin Room with Beach View</option>
+              <option selected>Double Room with Beach View</option>
+              <option>Queen Room with Balcony & Beach View</option>
+              <option>King Ensuite with Balcony & Beach View</option>
+            </select>
+          </div>
+          <!-- <div class="col-12">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="billingAddressCheck"
+              />
+              <label class="form-check-label" for="billingAddressCheck">
+                Is the mailing address the same as the billing address entered
+                above?
+              </label>
+            </div>
+          </div> -->
+        </form>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary" id="createBooking">
+            Create Booking
+          </button>
+        </div>
+
+    <!--Footer-->
+    <footer></footer>
+    <!--Footer-->
+
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./Scripts/namespace.js"></script>
+    <script src="./Scripts/reservation.js"></script>
+    <script src="./Scripts/user.js"></script>
+    <script src="./Scripts/guest.js"></script>
+    <script src="./Scripts/app.js"></script>
+  </body>
+</html>

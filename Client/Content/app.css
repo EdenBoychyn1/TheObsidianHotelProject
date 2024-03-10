@@ -1,0 +1,277 @@
+/*
+
+01 Typeography System: 
+      SPACING SYSTEM (px)
+      2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+
+      FONT SIZE SYSTEM (px)
+      10 / 12 / 14 / 16 / 18 / 20 / 24 / 30 / 36 / 44 / 52 / 62 / 74 / 86 / 98
+
+      LINE HEIGHTS: 
+      Default: 1
+
+      FONT WEIGHTS: 
+
+02 Colors: 
+      Primary: #f783ac, 
+      Tints: #fde6ee
+      Shades: 
+      Accents: 
+      Greys: 
+      
+03 Images: 
+
+05 Shadows: 
+
+06 Border-Radius: 
+  border-radius: 
+
+07 White Space: 
+      SPACING SYSTEM (px)
+      2 / 4 / 8 / 12 / 16 / 24 / 32 / 48 / 64 / 80 / 96 / 128
+
+
+*/
+/*********************************/
+/*********GENERAL REUSABLE CODE***/
+/*********************************/
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  line-height: 1;
+  font-weight: 400;
+  color: #252323;
+
+  overflow-x: hidden;
+}
+
+.no-marker {
+  display: block;
+}
+
+.fixed-bottom {
+  float: right;
+  text-align: right;
+}
+
+/*********************************/
+/*********NAVBAR SECTION**********/
+/*********************************/
+.navbar {
+  padding-left: 4.5rem;
+}
+
+.navbar-nav {
+  padding-right: 1.5rem;
+}
+
+.container {
+  width: auto;
+  height: auto;
+}
+
+/*********************************/
+/*********LOGIN PAGE**************/
+/*********************************/
+.fa-user,
+.fa-lock {
+  padding-right: 1.4rem;
+}
+
+.text-right {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+/*********************************/
+/*********HOME PAGE**************/
+/*********************************/
+.section-hero {
+  background-color: #fde6ee;
+  padding: 4.8rem 0;
+}
+
+.primary-heading {
+  font-size: 3.6rem;
+  line-height: 1.05;
+  margin: 3.2rem 4.8rem;
+}
+
+.hero-description {
+  font-size: 2rem;
+  line-height: 1.6;
+  margin: 1.2rem 4.8rem;
+}
+
+.hero-subheading {
+  font-size: 2.8rem;
+  margin-left: 4.8rem;
+}
+
+/*********************************/
+/*********ABOUT US**************/
+/*********************************/
+.hero {
+  display: flex;
+  align-items: center;
+}
+.hero-img {
+  width: 35%;
+}
+
+/*********************************/
+/*********RESERVATIONS************/
+/*********************************/
+
+.display-4 {
+  padding-top: 1rem;
+}
+
+/*********************************/
+/*********ROOMS******************/
+/*********************************/
+h1 .fa-hotel {
+  margin-top: 20px;
+}
+
+#slider {
+  margin: 50px auto;
+  width: 850px;
+  height: 330px;
+  max-width: 100%;
+
+  /* border: 1px solid black; */
+  border-radius: 50px;
+}
+
+#slider input[type="radio"] {
+  display: none;
+}
+
+#slider label {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+#slides {
+  padding: 10px;
+
+  background: #fff;
+  position: relative;
+  z-index: 1;
+}
+
+#overflow {
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+#slide1:checked ~ #slides .inner {
+  margin-left: 0;
+}
+#slide2:checked ~ #slides .inner {
+  margin-left: -100%;
+}
+#slide3:checked ~ #slides .inner {
+  margin-left: -200%;
+}
+#slide4:checked ~ #slides .inner {
+  margin-left: -300%;
+}
+
+#slides .inner {
+  transition: margin-left 800ms cubic-bezier(0.77, 0, 0.175, 1);
+  width: 400%;
+  line-height: 0;
+  height: 300px;
+}
+
+#slides .slide {
+  width: 25%;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+#slides .slide_1,
+.slide_2,
+.slide_3,
+.slide_4 {
+  background: #f783ac;
+}
+
+.slide-content {
+  padding: 10px;
+}
+
+#bullets {
+  margin: 25px 0 0;
+  text-align: center;
+}
+
+#bullets label {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #000;
+  margin: 0 10px;
+}
+
+#slide1:checked ~ #bullets label:nth-child(1),
+#slide2:checked ~ #bullets label:nth-child(2),
+#slide3:checked ~ #bullets label:nth-child(3),
+#slide4:checked ~ #bullets label:nth-child(4) {
+  background: #444;
+}
+
+.room-details {
+  list-style: none;
+}
+
+.room-details li {
+  display: flex;
+  align-items: center;
+}
+
+.room-icon,
+i {
+  width: 24px;
+  height: 24px;
+  margin-right: 15px;
+  stroke: #311a22;
+}
+
+img {
+  position: relative;
+  height: 260px;
+  float: inline-end;
+  border-radius: 25px;
+  padding: 20px;
+  margin: 15px;
+}
+
+.room-heading {
+  padding-top: 20px;
+  padding-bottom: 2px;
+}
+
+.room-text {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
