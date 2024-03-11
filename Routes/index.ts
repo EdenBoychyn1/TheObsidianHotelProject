@@ -30,6 +30,24 @@ router.get("/login", function (req, res, next) {
   res.render("index", { title: "Login", page: "login" });
 });
 
+router.get("/about", (req, res) => {
+  // Access session data
+  let isFrontDeskAgent = req.session.isFrontDeskAgent || false;
+
+  // Render your template with the session data
+  res.render("/index", {
+    title: "About Us",
+    page: "about",
+    isFrontDeskAgent,
+  });
+});
+
+router.post("/login", (req, res) => {
+  // After successful login, set session data
+  req.session.isFrontDeskAgent = true; // Or false depending on the user role
+  res.redirect("/");
+});
+
 /* GET Reservation page */
 router.get("/reservation", function (req, res, next) {
   res.render("index", { title: "Reservations", page: "reservation" });

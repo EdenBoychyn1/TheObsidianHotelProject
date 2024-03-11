@@ -23,6 +23,18 @@ router.get("/rooms", function (req, res, next) {
 router.get("/login", function (req, res, next) {
     res.render("index", { title: "Login", page: "login" });
 });
+router.get("/about", (req, res) => {
+    let isFrontDeskAgent = req.session.isFrontDeskAgent || false;
+    res.render("/index", {
+        title: "About Us",
+        page: "about",
+        isFrontDeskAgent,
+    });
+});
+router.post("/login", (req, res) => {
+    req.session.isFrontDeskAgent = true;
+    res.redirect("/");
+});
 router.get("/reservation", function (req, res, next) {
     res.render("index", { title: "Reservations", page: "reservation" });
 });

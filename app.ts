@@ -3,12 +3,35 @@ import express, { NextFunction } from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
+import session from "express-session";
 
 import indexRouter from "./Routes/index";
 import usersRouter from "./Routes/users";
 import createHttpError from "http-errors";
 
+// Configure session middleware
+// Define a custom interface extending express-session's Session interface
+interface CustomSession extends session.Session {
+  isFrontDeskAgent?: boolean; // Define your custom property here
+}
+
 const app = express();
+
+// Use express-session middleware with custom session interface
+app.use(
+  session({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: true, // or false based on your requirement
+    cookie: { secure: false }, // set secure to true if using https
+    // Define your custom session interface
+    // TypeScript will now recognize isFrontDeskAgent property
+  }) as unknown as express.RequestHandler<
+    express.Request & { session: CustomSession },
+    express.Response,
+    express.NextFunction
+  >
+);
 
 console.log(`Directory Name --> ${__dirname}`);
 console.log(`File Name --> ${__filename}`);

@@ -7,9 +7,16 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
+const express_session_1 = __importDefault(require("express-session"));
 const index_1 = __importDefault(require("./Routes/index"));
 const users_1 = __importDefault(require("./Routes/users"));
 const app = (0, express_1.default)();
+app.use((0, express_session_1.default)({
+    secret: "your_secret_key",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+}));
 console.log(`Directory Name --> ${__dirname}`);
 console.log(`File Name --> ${__filename}`);
 app.set("views", path_1.default.join(__dirname, "Views"));

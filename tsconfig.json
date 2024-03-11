@@ -16,6 +16,7 @@
     "esModuleInterop": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "skipLibCheck": true,
     "moduleResolution": "Node"
   },
   "exclude": ["node_modules"]
