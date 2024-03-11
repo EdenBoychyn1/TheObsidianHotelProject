@@ -9,6 +9,20 @@
   ******************************************************************************************************************************************************************************
   */
 
+  function Authorization() {
+    let protected_routes = [
+      "/reservation-edit",
+      "/reservation-list",
+      "/employee-register",
+    ]
+
+    if (protected_routes.indexOf(location.pathname) > -1) {
+      if (!sessionStorage.getItem("front_desk_agent")) {
+        location.href = "/login";
+      }
+    }
+  }
+
   /**
    * This function takes the fieldID from the input form and tests it against the regular expression to validate that specific field; the designated 
    * error message then populates for the specific field that was entered incorrectly.
@@ -136,44 +150,12 @@
           let password = window.btoa(document.getElementById("password").value);
           let security_level;
           let userName = emailAddress;
-          let guest;
-          // Depending on the title of the html, we will determine if the prospective user that is registering is a prospective guest
-          // or being registered as a front desk agent (security roles)
-          if (document.title === "Employee Register") {
-            security_level = "front_desk_agent";
-            user = new core.User(firstName, lastName, userName, emailAddress, security_level, password);
-            let key = userName;
-            // Store the key in local storage 
-            localStorage.setItem(key, user.serialize());
 
-          }
-          else {
-            security_level = "guest";
-
-            let unitNumber = document.getElementById("inputUnitNumber").value;
-            let streetNumber = AddressNumberSplit(document.getElementById("inputAddress").value);
-            let streetName = AddressSplit(document.getElementById("inputAddress").value);
-            let city = document.getElementById("inputCity").value;
-            let province = document.getElementById("inputProvince").value;
-            let country = document.getElementById("inputCountry").value;
-            let postalCode = document.getElementById("inputPostalCode").value;
-
-            let dateCreated;
-            let lastUpdated;
-
-            // Declare and initialize a user object and input the parameters for the constructor  
-            guest = new core.Guest(firstName, lastName, userName, emailAddress, security_level, password, unitNumber, streetNumber, streetName, city, province, country, postalCode, dateCreated, lastUpdated);
-            console.log(guest.toString());
-
-            // Seralize the user
-            if (guest.serialize()) {
-
-              // Let the username which is also the email be the key
-              let key = userName;
-              // Store the key in local storage 
-              localStorage.setItem(key, guest.serialize());
-            }
-          }
+          security_level = "front_desk_agent";
+          user = new core.User(firstName, lastName, userName, emailAddress, security_level, password);
+          let key = userName;
+          // Store the key in local storage 
+          localStorage.setItem(key, user.serialize());
 
           document.getElementById("registerForm").reset();
         }
@@ -185,92 +167,72 @@
   }
 
   /**
-   *
-   *
-   * @param {string} element
-   * @param {string} page_name
-   */
-  function loadMainComponents(element, page_name, index) {
-
-
-    let XHR = new XMLHttpRequest();
-
-    XHR.addEventListener("readystatechange", function () {
-
-      if (XHR.readyState === 4 && XHR.status === 200) {
-        document.getElementsByTagName(element)[index].innerHTML = XHR.responseText;
-      }
-    });
-
-    XHR.open("GET", `../Server/Components/${page_name}.html`);
-
-    XHR.send();
-
-  }
-
-  /**
- *
- *
- * @param {string} element
- * @param {string} page_name
+ * When the user selects the submit button we will return the values of the form like 
+ * first name, last name, email address, and password to initialize a User object.   
  */
-  function AjaxRequest(page_name, callback) {
+  function GuestUserRegistration() {
 
-    let XHR = new XMLHttpRequest();
+    // When the user selects the submit button we will return the values of the form like 
+    // first name, last name, email address, and password to initialize a User object.     
+    document.getElementById("submitButton").addEventListener("click", function (event) {
+      // Prevent default so that the form does not reset for testing purposes
+      event.preventDefault();
 
-    XHR.addEventListener("readystatechange", function () {
+      clearAllErrorMessages();
 
-      if (XHR.readyState === 4 && XHR.status === 200) {
+      let firstNameValid = ValidateField("firstName", /([A-Z][a-z]{1,})$/, "Please enter a valid first name. This must include at least a capitalized first name.");
+      let lastNameValid = ValidateField("lastName", /([A-Z][a-z]{1,})$/, "Please enter a valid last name. This must include at least a capitalized last name.");
+      let emailAddressValid = ValidateField("emailAddress", /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$/, "Please enter a valid email address.");
+      let passwordValid = ValidateField("password", /.{12,}$/, "The password must be at least 12 characters in length.")
+      let confirmPasswordValid = ValidateField("confirmPassword", /.{12,}$/, "The confirm password must be at least 12 characters in length and must match what was entered in the password field.");
+      let passwordMatch = PasswordMatch();
 
-        if (typeof callback === "function") {
-          callback(XHR.responseText)
+
+      if (firstNameValid === true && lastNameValid === true && emailAddressValid === true && passwordValid === true && confirmPasswordValid === true && passwordMatch === true) {
+        if (document.getElementById("termsAndConditionsCheckbox").checked) {
+
+          let firstName = document.getElementById("firstName").value;
+          let lastName = document.getElementById("lastName").value;
+          let emailAddress = document.getElementById("emailAddress").value;
+          let password = window.btoa(document.getElementById("password").value);
+          let security_level = "guest";
+          let userName = emailAddress;
+          let unitNumber = document.getElementById("inputUnitNumber").value;
+          let streetNumber = AddressNumberSplit(document.getElementById("inputAddress").value);
+          let streetName = AddressSplit(document.getElementById("inputAddress").value);
+          let city = document.getElementById("inputCity").value;
+          let province = document.getElementById("inputProvince").value;
+          let country = document.getElementById("inputCountry").value;
+          let postalCode = document.getElementById("inputPostalCode").value;
+          let dateCreated;
+          let lastUpdated;
+
+          // Declare and initialize a user object and input the parameters for the constructor  
+          let guest = new core.Guest(firstName, lastName, userName, emailAddress, security_level, password, unitNumber, streetNumber, streetName, city, province, country, postalCode, dateCreated, lastUpdated);
+          console.log(guest.toString());
+
+          // Seralize the user
+          if (guest.serialize()) {
+
+            // Let the username which is also the email be the key
+            let key = userName;
+            // Store the key in local storage 
+            localStorage.setItem(key, guest.serialize());
+          }
+
+          document.getElementById("registerForm").reset();
         }
-        else {
-          console.log("ERROR: callback is not a function");
-        }
+      }
+      else {
+        event.preventDefault();
       }
     });
-
-    XHR.open("GET", `../Server/Components/${page_name}.html`);
-
-    XHR.send();
-
-  }
-
-  function LoadHeader(html_data) {
-    document.getElementsByTagName("header")[0].innerHTML = html_data;
-
-    let typeOfUser = RetrieveKey();
-    CheckLogin(typeOfUser);
-  }
-
-  function LoadFooter(html_data) {
-    document.getElementsByTagName("footer")[0].innerHTML = html_data;
-
-    Copyright();
-    let typeOfUser = RetrieveKey();
-    // CheckLogin(typeOfUser);
-  }
-
-  function RetrieveKey() {
-    let keys = Object.keys(sessionStorage);
-
-    for (const key of keys) {
-
-      if (key === "guest") {
-        return key;
-      }
-      else if (key === "front_desk_agent") {
-        return key;
-      }
-    }
   }
 
   function AddressNumberSplit(address) {
     let split = address.split(" ");
     return split[0];
   }
-
 
   /**
    *
@@ -326,41 +288,29 @@
     });
   }
 
-  function RoomAssignment(reservation_start_date, reservation_end_date, room_type) {
+  function CheckLogin() {
 
-  }
-
-  /**
-   * Retrieve the room type that is acceptable for Room class so that this room type can be stored in the reservation and room object.
-   *
-   * @param {string} room_type
-   * @return {string} 
-   */
-  function RoomType(room_type) {
-    let roomType = "";
-    switch (room_type) {
-      case "Twin Room with Beach View":
-        return roomType = "TWN ROOM";
-      case "Double Room with Beach View":
-        return roomType = "DBL ROOM";
-      case "Queen Room with Balcony & Beach View":
-        return roomType = "QUEEN ROOM";
-      case "King Ensuite with Balcony & Beach View":
-        return roomType = "KING ROOM";
-    }
-  }
-
-  function CheckLogin(type_of_user) {
-
-    if (sessionStorage.getItem(type_of_user)) {
+    if (sessionStorage.getItem("front_desk_agent")) {
       let logoutText = document.getElementsByClassName("nav-item")[5];
 
       logoutText.innerHTML = `<a id="logout" class="nav-link" href="#">Logout</a>`;
 
       document.getElementById("logout").addEventListener("click", function () {
-        sessionStorage.removeItem(type_of_user);
+        sessionStorage.removeItem("front_desk_agent");
 
-        location.href = "login.html"
+        location.href = "/login"
+      });
+    }
+    else {
+      let logoutText = document.getElementsByClassName("nav-item")[5];
+
+      logoutText.innerHTML = `<a id="logout" class="nav-link" href="#">Logout</a>`;
+
+      document.getElementById("logout").addEventListener("click", function () {
+        sessionStorage.removeItem("guest");
+
+        location.href = "/login"
+
       });
     }
   }
@@ -443,8 +393,6 @@
   */
   function DisplayAboutPage() {
     console.log("About Us Page");
-
-    loadMainComponents("div", "picture-div", 2);
   }
 
   /**
@@ -500,7 +448,7 @@
               errorMessage.style.display = "none";
 
               // redirect the user to the secure area of our site - contact-list.html
-              location.href = "about.html";
+              location.href = "/about";
             }
             // else if bad credentials were entered...
             else {
@@ -528,7 +476,7 @@
               errorMessage.style.display = "none";
 
               // redirect the user to the secure area of our site - contact-list.html
-              location.href = "about.html";
+              location.href = "/about";
             }
             // else if bad credentials were entered...
             else {
@@ -553,7 +501,7 @@
     console.log("Register Page");
 
     // Invoke the UserRegistration() method
-    UserRegistration();
+    GuestUserRegistration();
   }
 
   /**
@@ -604,20 +552,24 @@
         index++
       }
 
-
       reservationList.innerHTML = data;
 
-      document.querySelector(".delete").addEventListener("click", function () {
+
+      $("button.delete").on("click", function () {
         if (confirm("Are you sure?")) {
-          localStorage.removeItem(this.value);
+          localStorage.removeItem($(this).val());
         }
-        location.href = "reservation-list.html";
+
+        // refresh after deleting
+        location.href = "/reservation-list";
       });
 
-      document.querySelector(".edit").addEventListener("click", function () {
-        location.href = "reservation-edit.html#" + this.value;
+      $("button.edit").on("click", function () {
+        location.href = "/reservation-edit#" + $(this).val();
       });
-    }
+
+
+    };
 
   }
 
@@ -659,7 +611,7 @@
       editReservation.BillingPostalCode = document.getElementById("inputPostalCode").value;
 
       localStorage.setItem(substring, editReservation.serialize());
-      location.href = "reservation-list.html";
+      location.href = "/reservation-list";
     });
   }
 
@@ -676,47 +628,44 @@
   function Start() {
     console.log("App Started!");
 
-    let typeOfUser = RetrieveKey();
+    Copyright();
 
-    if (typeOfUser === "front_desk_agent") {
-      AjaxRequest("employee-header", LoadHeader);
-    }
-    else {
-      AjaxRequest("header", LoadHeader);
-    }
+    CheckLogin();
 
-    AjaxRequest("footer", LoadFooter);
+    let page_id = document.getElementsByTagName("body")[0].getAttribute("id");
 
-
-    switch (document.title) {
-      case "Home":
+    switch (page_id) {
+      case "home":
         DisplayHomePage();
         break;
-      case "Rooms":
+      case "rooms":
         DisplayRoomsPage();
         break;
-      case "Reservations":
+      case "reservation":
         DisplayReservationPage();
         break;
-      case "Gallery":
+      case "gallery":
         DisplayGalleryPage();
         break;
-      case "About":
+      case "about":
         DisplayAboutPage();
         break;
-      case "Login":
+      case "login":
         DisplayLoginPage();
         break;
-      case "Register":
+      case "register":
         DisplayRegisterPage();
         break;
-      case "Employee Register":
+      case "employee-register":
+        Authorization();
         DisplayEmployeeRegisterPage();
         break;
-      case "Reservation List":
+      case "reservation-list":
+        Authorization();
         DisplayReservationListPage();
         break;
-      case "Edit":
+      case "reservation-edit":
+        Authorization();
         DisplayReservationEditPage();
         break;
     }

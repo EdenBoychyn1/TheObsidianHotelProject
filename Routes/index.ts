@@ -51,7 +51,7 @@ router.get("/register", function (req, res, next) {
   });
 });
 
-/* GET Guest Register page */
+/* GET Reservation Edit page */
 router.get("/reservation-edit", function (req, res, next) {
   res.render("index", {
     title: "Edit Reservation",
