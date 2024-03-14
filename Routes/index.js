@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
+const reservation_1 = __importDefault(require("../Models/reservation"));
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Home", page: "home" });
 });
@@ -58,11 +59,21 @@ router.get("/reservation-edit", function (req, res, next) {
         page: "reservation-edit",
     });
 });
-router.get("/reservation-list", function (req, res, next) {
-    res.render("index", {
-        title: "Reservation List",
-        page: "reservation-list",
-    });
+router.get("/reservation-list", async (req, res, next) => {
+    try {
+        const reservationsCollection = await reservation_1.default.find({}).exec();
+        res.render("index", {
+            title: "Reservation List",
+            page: "reservation-list",
+            displayName: "",
+            reservations: reservationsCollection,
+        });
+        console.log(reservationsCollection);
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 exports.default = router;
 //# sourceMappingURL=index.js.map

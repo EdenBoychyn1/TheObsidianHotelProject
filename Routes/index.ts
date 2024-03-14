@@ -1,6 +1,8 @@
 import express from "express";
 const router = express.Router();
 
+import Reservation from "../Models/reservation";
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Home", page: "home" });
@@ -83,11 +85,37 @@ router.get("/reservation-edit", function (req, res, next) {
   });
 });
 
-/* GET Reservation List page */
-router.get("/reservation-list", function (req, res, next) {
-  res.render("index", {
-    title: "Reservation List",
-    page: "reservation-list",
-  });
+router.get("/reservation-list", async (req, res, next) => {
+  try {
+    const reservationsCollection = await Reservation.find({}).exec();
+    res.render("index", {
+      title: "Reservation List",
+      page: "reservation-list",
+      displayName: "",
+      reservations: reservationsCollection,
+    });
+    console.log(`Reservation List ${reservationsCollection}`);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error"); // Handle the error gracefully
+  }
 });
+
+/* GET Reservation List page */
+// // router.get("/reservation-list", function (req, res, next) {
+// //   Reservation.find(function (err: any, reservations: any) {
+// //     if (err) {
+// //       console.log(
+// //         "Encountered an Error reading from the database: " + err.message
+// //       );
+// //     }
+
+// //     console.log(reservations);
+// //   });
+
+//   res.render("index", {
+//     title: "Reservation List",
+//     page: "reservation-list",
+//   });
+// });
 export default router;
