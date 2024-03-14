@@ -53,12 +53,6 @@ router.get("/register", function (req, res, next) {
         page: "register",
     });
 });
-router.get("/reservation-edit", function (req, res, next) {
-    res.render("index", {
-        title: "Edit Reservation",
-        page: "reservation-edit",
-    });
-});
 router.get("/reservation-list", async (req, res, next) => {
     try {
         const reservationsCollection = await reservation_1.default.find({}).exec();
@@ -68,11 +62,36 @@ router.get("/reservation-list", async (req, res, next) => {
             displayName: "",
             reservations: reservationsCollection,
         });
-        console.log(reservationsCollection);
+        console.log(`Reservation List ${reservationsCollection}`);
     }
     catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
+    }
+});
+router.get("/add", function (req, res, next) {
+    res.render("index", {
+        title: "Add",
+        page: "reservation-edit",
+        reservation: "",
+        displayName: "",
+    });
+});
+router.get("/reservation-edit/:id", async (req, res, next) => {
+    let id = req.params.id;
+    try {
+        const reservationToEdit = await reservation_1.default.findById(id).exec();
+        console.log(reservationToEdit);
+        res.render("index", {
+            title: "Edit",
+            page: "reservation-edit",
+            reservation: reservationToEdit,
+            displayName: "",
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send(error);
     }
 });
 exports.default = router;

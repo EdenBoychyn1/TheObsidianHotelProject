@@ -27,7 +27,7 @@
           <td><%= reservations[count].ReservationStartDate %></td>
           <td><%= reservations[count].ReservationEndDate %></td>
           <td><%= reservations[count].NumberOfGuests %></td>
-          <td class="text-center"><a href="/edit/<%= reservations[count]._id %>" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Update Reservation</button></td>
+          <td class="text-center"><a href="/reservation-edit/<%= reservations[count]._id %>" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Update Reservation</button></td>
           <td class="text-center"><a href="/delete/<%= reservations[count]._id %>" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete Reservation</button></td>
           <td class="text-center"><a href="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-In</button></td>
           <td class="text-center"><a href="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-Out</button></td>

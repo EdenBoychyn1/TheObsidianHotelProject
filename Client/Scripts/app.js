@@ -519,59 +519,59 @@
   function DisplayReservationListPage() {
     console.log("Reservation List Page");
 
-    if (localStorage.length > 0) {
-      let reservationList = document.getElementById("reservationList");
+    // if (localStorage.length > 0) {
+    //   let reservationList = document.getElementById("reservationList");
 
-      // Insert data from localstorage
-      let data = "";
+    //   // Insert data from localstorage
+    //   let data = "";
 
-      // Returns an array of keys
-      let keys = Object.keys(localStorage);
+    //   // Returns an array of keys
+    //   let keys = Object.keys(localStorage);
 
-      // Counts the keys
-      let index = 1;
+    //   // Counts the keys
+    //   let index = 1;
 
-      for (const key of keys) {
-        let reservationData = localStorage.getItem(key);
+    //   for (const key of keys) {
+    //     let reservationData = localStorage.getItem(key);
 
-        let newReservation = new core.Reservation();
+    //     let newReservation = new core.Reservation();
 
-        newReservation.deserialize(reservationData);
+    //     newReservation.deserialize(reservationData);
 
-        // Inject a repeatable row into the contactlist
-        data += `<tr>
-        <th scope="row" class="text-center">${index}</th>
-        <td>${key}</td>
-        <td>${newReservation.CheckInDate}</td>
-        <td>${newReservation.CheckOutDate}</td>
-        <td>${newReservation.NumberOfGuests}</td>
-        <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Update Reservation</button></td>
-        <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete Reservation</button></td>
-        <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-In</button></td>
-        <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-Out</button></td>
-        </tr> `;
+    //     // Inject a repeatable row into the contactlist
+    //     data += `<tr>
+    //     <th scope="row" class="text-center">${index}</th>
+    //     <td>${key}</td>
+    //     <td>${newReservation.CheckInDate}</td>
+    //     <td>${newReservation.CheckOutDate}</td>
+    //     <td>${newReservation.NumberOfGuests}</td>
+    //     <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Update Reservation</button></td>
+    //     <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete Reservation</button></td>
+    //     <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-In</button></td>
+    //     <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-Out</button></td>
+    //     </tr> `;
 
-        index++
-      }
+    //     index++
+    //   }
 
-      reservationList.innerHTML = data;
-
-
-      $("button.delete").on("click", function () {
-        if (confirm("Are you sure?")) {
-          localStorage.removeItem($(this).val());
-        }
-
-        // refresh after deleting
-        location.href = "/reservation-list";
-      });
-
-      $("button.edit").on("click", function () {
-        location.href = "/reservation-edit#" + $(this).val();
-      });
+    //   reservationList.innerHTML = data;
 
 
-    };
+    //   $("button.delete").on("click", function () {
+    //     if (confirm("Are you sure?")) {
+    //       localStorage.removeItem($(this).val());
+    //     }
+
+    //     // refresh after deleting
+    //     location.href = "/reservation-list";
+    //   });
+
+    //   $("button.edit").on("click", function () {
+    //     location.href = "/reservation-edit#" + $(this).val();
+    //   });
+
+
+    // };
 
   }
 

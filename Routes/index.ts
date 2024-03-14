@@ -78,12 +78,12 @@ router.get("/register", function (req, res, next) {
 });
 
 /* GET Reservation Edit page */
-router.get("/reservation-edit", function (req, res, next) {
-  res.render("index", {
-    title: "Edit Reservation",
-    page: "reservation-edit",
-  });
-});
+// router.get("/reservation-edit", function (req, res, next) {
+//   res.render("index", {
+//     title: "Edit Reservation",
+//     page: "reservation-edit",
+//   });
+// });
 
 router.get("/reservation-list", async (req, res, next) => {
   try {
@@ -99,6 +99,36 @@ router.get("/reservation-list", async (req, res, next) => {
     console.error(error);
     res.status(500).send("Internal Server Error"); // Handle the error gracefully
   }
+});
+
+/* Display the Add Page */
+router.get("/add", function (req, res, next) {
+  res.render("index", {
+    title: "Add",
+    page: "reservation-edit",
+    reservation: "",
+    displayName: "",
+  });
+});
+
+/* Display the EditPage */
+/* Display the Edit Page with Data injected from the db */
+router.get("/reservation-edit/:id", async (req, res, next) => {
+  let id = req.params.id;
+  try {
+    const reservationToEdit = await Reservation.findById(id).exec();
+    console.log(reservationToEdit);
+    res.render("index", {
+      title: "Edit",
+      page: "reservation-edit",
+      reservation: reservationToEdit,
+      displayName: "",
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send(error); // Handle the error gracefully
+  }
+  // pass the id to the db and read the contact in
 });
 
 export default router;
