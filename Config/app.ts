@@ -24,7 +24,7 @@ mongoose.connect(DBConfig.LocalURI);
 //Alias for mongoose connection
 const db = mongoose.connection; //
 db.on("error", function () {
-  console.error("Connection Error!");
+  console.error(`Connection Error! ${DBConfig.LocalURI}`);
 });
 db.once("open", function () {
   console.log(`Connection to MongoDB at ${DBConfig.HostName}`);

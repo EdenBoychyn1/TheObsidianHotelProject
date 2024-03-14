@@ -39,7 +39,7 @@ const DBConfig = __importStar(require("./db"));
 mongoose_1.default.connect(DBConfig.LocalURI);
 const db = mongoose_1.default.connection;
 db.on("error", function () {
-    console.error("Connection Error!");
+    console.error(`Connection Error! ${DBConfig.LocalURI}`);
 });
 db.once("open", function () {
     console.log(`Connection to MongoDB at ${DBConfig.HostName}`);
