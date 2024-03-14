@@ -27,25 +27,31 @@ router.get("/rooms", function (req, res, next) {
 
 /* GET login page */
 router.get("/login", function (req, res, next) {
-  res.render("index", { title: "Login", page: "login" });
+  let username = req.body.userName;
+  let password = req.body.password;
+
+  console.log(username, password);
+  res.render("index", {
+    title: "Login",
+    page: "login",
+  });
+});
+
+/* GET login page */
+router.post("/login", function (req, res, next) {
+  // res.render("index", {
+  //   title: "Login",
+  //   page: "login",
+  // });
 });
 
 router.get("/about", (req, res) => {
   // Access session data
-  let isFrontDeskAgent = req.session.isFrontDeskAgent || false;
-
   // Render your template with the session data
   res.render("/index", {
     title: "About Us",
     page: "about",
-    isFrontDeskAgent,
   });
-});
-
-router.post("/login", (req, res) => {
-  // After successful login, set session data
-  req.session.isFrontDeskAgent = true; // Or false depending on the user role
-  res.redirect("/");
 });
 
 /* GET Reservation page */

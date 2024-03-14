@@ -21,19 +21,21 @@ router.get("/rooms", function (req, res, next) {
     res.render("index", { title: "Room", page: "rooms" });
 });
 router.get("/login", function (req, res, next) {
-    res.render("index", { title: "Login", page: "login" });
+    let username = req.body.userName;
+    let password = req.body.password;
+    console.log(username, password);
+    res.render("index", {
+        title: "Login",
+        page: "login",
+    });
+});
+router.post("/login", function (req, res, next) {
 });
 router.get("/about", (req, res) => {
-    let isFrontDeskAgent = req.session.isFrontDeskAgent || false;
     res.render("/index", {
         title: "About Us",
         page: "about",
-        isFrontDeskAgent,
     });
-});
-router.post("/login", (req, res) => {
-    req.session.isFrontDeskAgent = true;
-    res.redirect("/");
 });
 router.get("/reservation", function (req, res, next) {
     res.render("index", { title: "Reservations", page: "reservation" });

@@ -5,47 +5,37 @@ import cookieParser from "cookie-parser";
 import logger from "morgan";
 import session from "express-session";
 
-import indexRouter from "./Routes/index";
-import usersRouter from "./Routes/users";
+import indexRouter from "../Routes/index";
+import usersRouter from "../Routes/users";
 import createHttpError from "http-errors";
 
 // Configure session middleware
 // Define a custom interface extending express-session's Session interface
-interface CustomSession extends session.Session {
-  isFrontDeskAgent?: boolean; // Define your custom property here
-}
 
 const app = express();
 
 // Use express-session middleware with custom session interface
 app.use(
   session({
-    secret: "your_secret_key",
+    secret: "your-secret-key",
     resave: false,
-    saveUninitialized: true, // or false based on your requirement
-    cookie: { secure: false }, // set secure to true if using https
-    // Define your custom session interface
-    // TypeScript will now recognize isFrontDeskAgent property
-  }) as unknown as express.RequestHandler<
-    express.Request & { session: CustomSession },
-    express.Response,
-    express.NextFunction
-  >
+    saveUninitialized: true,
+  })
 );
 
 console.log(`Directory Name --> ${__dirname}`);
 console.log(`File Name --> ${__filename}`);
 // view engine setup
-app.set("views", path.join(__dirname, "Views"));
+app.set("views", path.join(__dirname, "../Views"));
 app.set("view engine", "ejs");
 
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "Client")));
+app.use(express.static(path.join(__dirname, "../Client")));
 
-app.use(express.static(path.join(__dirname, "node_modules")));
+app.use(express.static(path.join(__dirname, "../node_modules")));
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 

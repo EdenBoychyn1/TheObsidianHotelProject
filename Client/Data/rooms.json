@@ -2,6 +2,8 @@
   "rooms": [
     {
       "RoomNumber": 1,
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-15",
       "RoomDescription": "The Twin Bed and Beach-View retreat offers you and any accompanied companion a rejuvenating place to relax with modern state-of-the-art amenities.",
       "Room Type": "TWN ROOM",
       "RoomPrice": 100.0,
@@ -12,6 +14,8 @@
     },
     {
       "RoomNumber": 2,
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-15",
       "RoomDescription": "The Twin Bed and Beach-View retreat offers you and any accompanied companion a rejuvenating place to relax with modern state-of-the-art amenities.",
       "Room Type": "TWN ROOM",
       "RoomPrice": 100.0,
@@ -22,6 +26,8 @@
     },
     {
       "RoomNumber": 3,
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-15",
       "RoomDescription": "Enjoy the breathtaking views from your Double Bedroom and experience and enhanced stay by taking advantage of the room amenities.",
       "Room Type": "DBL ROOM",
       "RoomPrice": 110.0,
@@ -32,6 +38,8 @@
     },
     {
       "RoomNumber": 4,
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-16",
       "RoomDescription": "Enjoy the breathtaking views from your Double Bedroom and experience and enhanced stay by taking advantage of the room amenities.",
       "Room Type": "DBL ROOM",
       "RoomPrice": 110.0,
@@ -42,6 +50,8 @@
     },
     {
       "RoomNumber": 5,
+      "ReservationStartDate": "2024-03-18",
+      "ReservationEndDate": "2024-03-21",
       "RoomDescription": "Enjoy and restore in this elegant Queen bedroom with beautiful and breathtaking views of Tulum Beach.",
       "Room Type": "QUEEN ROOM",
       "RoomPrice": 150.0,
@@ -52,6 +62,8 @@
     },
     {
       "RoomNumber": 6,
+      "ReservationStartDate": "2024-03-19",
+      "ReservationEndDate": "2024-03-21",
       "RoomDescription": "Enjoy and restore in this elegant Queen bedroom with beautiful and breathtaking views of Tulum Beach.",
       "Room Type": "QUEEN ROOM",
       "RoomPrice": 150.0,
@@ -62,6 +74,8 @@
     },
     {
       "RoomNumber": 7,
+      "ReservationStartDate": "2024-03-17",
+      "ReservationEndDate": "2024-03-21",
       "RoomDescription": "Restore and relax with our most premium room. Not only can you enjoy state-of-the-art emities with this newly refurbished room but you can take in the Ocean breeze and view with the balcony and enjoy the beach view.",
       "Room Type": "KING ROOM",
       "RoomPrice": 150.0,
@@ -72,6 +86,8 @@
     },
     {
       "RoomNumber": 8,
+      "ReservationStartDate": "2024-04-18",
+      "ReservationEndDate": "2024-04-19",
       "RoomDescription": "Restore and relax with our most premium room. Not only can you enjoy state-of-the-art emities with this newly refurbished room but you can take in the Ocean breeze and view with the balcony and enjoy the beach view.",
       "Room Type": "KING ROOM",
       "RoomPrice": 150.0,

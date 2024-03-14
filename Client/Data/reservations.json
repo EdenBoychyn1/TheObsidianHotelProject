@@ -2,51 +2,54 @@
   "reservations": [
     {
       "ReservationID": "Boychyn1708909725738",
-      "CheckInDate": "2024-02-24",
-      "CheckOutDate": "2024-02-25",
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-15",
       "NumberOfGuests": 2,
-      "RoomNumber": "1",
+      "RoomNumber": 1,
       "BillingUnitNumber": "",
       "BillingStreetNumber": "25",
       "BillingStreetName": "Cascade Boulevard",
       "BillingCity": "Belleville",
       "BillingProvince": "Ontario",
       "BillingCountry": "Canada",
-      "BillingPostalCode": "K8P 4R6",
+      "BillingPostalCode": "K8P4R6",
       "DateCreated": "1708909725738",
-      "Last Update": "1708909725738"
+      "LastUpdate": "1708909725738",
+      "EmailAddress": "Eden_Boychyn@hotmail.com"
     },
     {
       "ReservationID": "Doe1708909725738",
-      "CheckInDate": "2024-02-24",
-      "CheckOutDate": "2024-02-25",
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-15",
       "NumberOfGuests": 2,
-      "RoomNumber": "2",
+      "RoomNumber": 2,
       "BillingUnitNumber": "",
       "BillingStreetNumber": "419",
       "BillingStreetName": "King St W",
       "BillingCity": "Oshawa",
       "BillingProvince": "Ontario",
       "BillingCountry": "Canada",
-      "BillingPostalCode": "L1J 2K5",
+      "BillingPostalCode": "L1J2K5",
       "DateCreated": "1708909725738",
-      "Last Update": "1708909725738"
+      "LastUpdate": "1708909725738",
+      "EmailAddress": "John_Smith@hotmail.com"
     },
     {
       "ReservationID": "Admin1708909725738",
-      "CheckInDate": "2024-02-25",
-      "CheckOutDate": "2024-02-26",
+      "ReservationStartDate": "2024-03-14",
+      "ReservationEndDate": "2024-03-15",
       "NumberOfGuests": 2,
-      "RoomNumber": "3",
+      "RoomNumber": 3,
       "BillingUnitNumber": "",
       "BillingStreetNumber": "2000",
       "BillingStreetName": "Simcoe St N",
       "BillingCity": "Oshawa",
       "BillingProvince": "Ontario",
       "BillingCountry": "Canada",
-      "BillingPostalCode": "L1G 0C5",
+      "BillingPostalCode": "L1G0C5",
       "DateCreated": "1708909725738",
-      "Last Update": "1708909725738"
+      "LastUpdate": "1708909725738",
+      "EmailAddress": "Admin@hotmail.com"
     }
   ]
 }

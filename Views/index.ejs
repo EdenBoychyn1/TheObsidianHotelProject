@@ -18,12 +18,7 @@
   </head>
   <body id="<%= page %>">
     <!--Main Header-->
-    <header>
-      <%- if (isFrontDeskAgent) { -%> <%-
-      include('./components/employee-header') -%> <%- } else { -%> <%-
-      include('./components/header') -%> <%- } -%>
-    </header>
-
+    <header><%- include('./components/header') -%></header>
     <!--Main Content-->
     <main class="container"><%- include('./content/' + page) -%></main>
 

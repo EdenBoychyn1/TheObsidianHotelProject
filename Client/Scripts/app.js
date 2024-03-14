@@ -9,19 +9,19 @@
   ******************************************************************************************************************************************************************************
   */
 
-  function Authorization() {
-    let protected_routes = [
-      "/reservation-edit",
-      "/reservation-list",
-      "/employee-register",
-    ]
+  // function Authorization() {
+  //   let protected_routes = [
+  //     "/reservation-edit",
+  //     "/reservation-list",
+  //     "/employee-register",
+  //   ]
 
-    if (protected_routes.indexOf(location.pathname) > -1) {
-      if (!sessionStorage.getItem("front_desk_agent")) {
-        location.href = "/login";
-      }
-    }
-  }
+  //   if (protected_routes.indexOf(location.pathname) > -1) {
+  //     if (!sessionStorage.getItem("front_desk_agent")) {
+  //       location.href = "/login";
+  //     }
+  //   }
+  // }
 
   /**
    * This function takes the fieldID from the input form and tests it against the regular expression to validate that specific field; the designated 
@@ -442,7 +442,7 @@
               newGuest.deserialize(user_data);
 
               // add user to session storage
-              sessionStorage.setItem("guest", newGuest.serialize());
+              sessionStorage.setItem("guest", JSON.stringify(newGuest.serialize()));
 
               // hide any error message
               errorMessage.style.display = "none";
@@ -470,7 +470,7 @@
             // if username and password matches - success.. the perform the login sequence
             if (loginSuccess) {
               // add user to session storage
-              sessionStorage.setItem("front_desk_agent", newUser.serialize());
+              sessionStorage.setItem("front_desk_agent", JSON.stringify(newUser.serialize()));
 
               // hide any error message
               errorMessage.style.display = "none";
@@ -547,6 +547,8 @@
         <td>${newReservation.NumberOfGuests}</td>
         <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i> Update Reservation</button></td>
         <td class="text-center"><button value="${key}" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i> Delete Reservation</button></td>
+        <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-In</button></td>
+        <td class="text-center"><button value="${key}" class="btn btn-primary btn-sm edit"><i class="fas fa-trash-alt fa-sm"></i> Check-Out</button></td>
         </tr> `;
 
         index++
@@ -657,15 +659,15 @@
         DisplayRegisterPage();
         break;
       case "employee-register":
-        Authorization();
+        // Authorization();
         DisplayEmployeeRegisterPage();
         break;
       case "reservation-list":
-        Authorization();
+        // Authorization();
         DisplayReservationListPage();
         break;
       case "reservation-edit":
-        Authorization();
+        // Authorization();
         DisplayReservationEditPage();
         break;
     }
