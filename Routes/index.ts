@@ -101,21 +101,4 @@ router.get("/reservation-list", async (req, res, next) => {
   }
 });
 
-/* GET Reservation List page */
-// // router.get("/reservation-list", function (req, res, next) {
-// //   Reservation.find(function (err: any, reservations: any) {
-// //     if (err) {
-// //       console.log(
-// //         "Encountered an Error reading from the database: " + err.message
-// //       );
-// //     }
-
-// //     console.log(reservations);
-// //   });
-
-//   res.render("index", {
-//     title: "Reservation List",
-//     page: "reservation-list",
-//   });
-// });
 export default router;
