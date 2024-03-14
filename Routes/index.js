@@ -62,7 +62,6 @@ router.get("/reservation-list", async (req, res, next) => {
             displayName: "",
             reservations: reservationsCollection,
         });
-        console.log(`Reservation List ${reservationsCollection}`);
     }
     catch (error) {
         console.error(error);
@@ -77,21 +76,50 @@ router.get("/add", function (req, res, next) {
         displayName: "",
     });
 });
-router.get("/reservation-edit/:id", async (req, res, next) => {
-    let id = req.params.id;
+router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
+    const emailAddress = req.params.EmailAddress;
     try {
-        const reservationToEdit = await reservation_1.default.findById(id).exec();
-        console.log(reservationToEdit);
-        res.render("index", {
+        const reservation = await reservation_1.default.aggregate([
+            {
+                $match: { EmailAddress: emailAddress },
+            },
+            {
+                $lookup: {
+                    from: "guests",
+                    localField: "EmailAddress",
+                    foreignField: "EmailAddress",
+                    as: "guest",
+                },
+            },
+        ]).exec();
+        reservation.forEach((mergedDocument, index) => {
+            console.log(`Merged Document ${index + 1}:`, mergedDocument);
+            console.log(`Reservation ID:`, mergedDocument.ReservationID);
+            console.log(`Guest First Name:`, mergedDocument.guest[0].FirstName);
+            if (Array.isArray(mergedDocument.guest) &&
+                mergedDocument.guest.length > 0) {
+                const firstGuest = mergedDocument.guest[0];
+                if (firstGuest.FirstName) {
+                    console.log(`Guest First Name:`, firstGuest.FirstName);
+                }
+                else {
+                    console.log(`Guest First Name is not available`);
+                }
+            }
+            else {
+                console.log(`No guest information available`);
+            }
+        });
+        return res.render("index", {
             title: "Edit",
             page: "reservation-edit",
-            reservation: reservationToEdit,
+            reservation: reservation,
             displayName: "",
         });
     }
-    catch (error) {
-        console.error(error);
-        res.status(500).send(error);
+    catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 });
 exports.default = router;

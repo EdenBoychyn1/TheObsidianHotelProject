@@ -5,16 +5,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
-const UserSchema = new Schema({
+const GuestSchema = new Schema({
     FirstName: String,
     LastName: String,
     UserName: String,
     SecurityLevel: String,
     EmailAddress: String,
     Password: String,
+    UnitNumber: String,
+    StreetNumber: String,
+    StreetName: String,
+    City: String,
+    Province: String,
+    Country: String,
+    PostalCode: String,
+    DateCreated: Number,
+    LastUpdate: Number,
 }, {
-    collection: "users",
+    collection: "guests",
 });
-const Model = mongoose_1.default.model("User", UserSchema);
+const Model = mongoose_1.default.model("Guest", GuestSchema);
 exports.default = Model;
-//# sourceMappingURL=contact.js.map
+//# sourceMappingURL=guest.js.map
