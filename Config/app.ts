@@ -4,6 +4,7 @@ import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import session from "express-session";
+import mongoose from "mongoose";
 
 import indexRouter from "../Routes/index";
 import usersRouter from "../Routes/users";
@@ -13,6 +14,21 @@ import createHttpError from "http-errors";
 // Define a custom interface extending express-session's Session interface
 
 const app = express();
+
+// db configuration
+// Find the DB Config file
+import * as DBConfig from "./db";
+
+// Connect to the NoSQL DB by using the connection method and inputting the LocalURI string
+mongoose.connect(DBConfig.LocalURI);
+//Alias for mongoose connection
+const db = mongoose.connection; //
+db.on("error", function () {
+  console.error("Connection Error!");
+});
+db.once("open", function () {
+  console.log(`Connection to MongoDB at ${DBConfig.HostName}`);
+});
 
 // Use express-session middleware with custom session interface
 app.use(
