@@ -102,25 +102,19 @@ router.get("/add", function (req, res, next) {
   });
 });
 
-/* Display the EditPage */
-/* Display the Edit Page with Data injected from the db */
-// router.get("/reservation-edit/:id", async (req, res, next) => {
-//   let id = req.params.id;
-//   try {
-//     const reservationToEdit = await Reservation.findById(id).exec();
-//     console.log(reservationToEdit);
-//     res.render("index", {
-//       title: "Edit",
-//       page: "reservation-edit",
-//       reservation: reservationToEdit,
-//       displayName: "",
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send(error); // Handle the error gracefully
-//   }
-//   // pass the id to the db and read the contact in
-// });
+// My Code that I spent 2 hours wondering why my delete middleware method wasn't working.
+router.get("/delete/:EmailAddress", async function (req, res, next) {
+  try {
+    let emailAddress = req.params.EmailAddress;
+
+    await Reservation.deleteOne({ EmailAddress: emailAddress });
+
+    res.redirect("/reservation-list");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
   const emailAddress = req.params.EmailAddress;
@@ -175,86 +169,43 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
   }
 });
 
-/* Process the Add Request */
-/* GET Reservation page */
-// router.post("/reservation-edit:id", async (req, res, next) => {
-//   // Instantiate a new reservation
-//   let id = req.params.id;
+/* Display the EditPage */
+/* Display the Edit Page with Data injected from the db */
+router.post("./reservation-edit/:EmailAddress/:id", async (req, res, next) => {
+  try {
+    let emailAddress = req.params.EmailAddress;
+    let id = req.params.id;
+    let address = req.body.inputAddress;
+    let addressSplit = address.split(" ");
+    let streetNumber = addressSplit[0];
+    let streetName = addressSplit[1];
+    for (let i = 2; i < addressSplit.length; i++) {
+      streetName += " " + addressSplit[i];
+    }
+    // instantiate a new contact to edit
+    let updatedReservation = new Reservation({
+      _id: id,
+      ReservationStartDate: req.body.inputCheckInDate,
+      ReservationEndDate: req.body.inputCheckOutDate,
+      NumberOfGuests: req.body.inputPax,
+      RoomNumber: 1,
+      BillingUnitNumber: req.body.inputUnitNumber,
+      BillingStreetNumber: streetNumber,
+      BillingStreetName: streetName,
+      BillingCity: req.body.inputCity,
+      BillingProvince: req.body.inputProvince,
+      BillingCountry: req.body.inputCountry,
+      BillingPostalCode: req.body.inputPostalCode,
+      EmailAddress: emailAddress,
+    });
 
-//   let combinedData: any; // Define a variable to store the combined data
-//   try {
-//     const result = await Reservation.aggregate([
-//       {
-//         $match: { _id: id }, // Match the reservation by EmailAddress
-//       },
-//       {
-//         $lookup: {
-//           from: "guests", // The collection you're looking up into (Guest collection)
-//           localField: "EmailAddress", // Field from Reservation collection
-//           foreignField: "EmailAddress", // Field from Guest collection
-//           as: "guest", // Alias for the joined documents
-//         },
-//       },
-//       {
-//         $unwind: "$guest", // Deconstruct the guest array created by $lookup
-//       },
-//       {
-//         $project: {
-//           _id: 1, // Include Reservation _id
-//           ReservationID: 1,
-//           ReservationStartDate: 1,
-//           ReservationEndDate: 1,
-//           NumberOfGuests: 1,
-//           RoomNumber: 1,
-//           BillingUnitNumber: 1,
-//           BillingStreetNumber: 1,
-//           BillingStreetName: 1,
-//           BillingCity: 1,
-//           BillingProvince: 1,
-//           BillingCountry: 1,
-//           BillingPostalCode: 1,
-//           DateCreated: 1,
-//           LastUpdate: 1,
-//           EmailAddress: 1,
-//           guest: {
-//             FirstName: 1, // Include Guest fields
-//             LastName: 1,
-//             UserName: 1,
-//             SecurityLevel: 1,
-//             UnitNumber: 1,
-//             StreetNumber: 1,
-//             StreetName: 1,
-//             City: 1,
-//             Province: 1,
-//             Country: 1,
-//             PostalCode: 1,
-//             DateCreated: 1,
-//             LastUpdate: 1,
-//           },
-//         },
-//       },
-//     ]).exec();
+    console.log(` Updated Reservation: ${updatedReservation}`);
+    await Reservation.updateOne({ _id: id }, updatedReservation);
 
-//     // if (!result || result.length === 0) {
-//     //   res
-//     //     .status(404)
-//     //     .json({ error: "No reservation found for the provided email address" });
-//     // }
-
-//     combinedData = result[0]; // Store the combined data in the variable
-//     console.log(`Combined Data: ${combinedData}`);
-//     return res.render("index", {
-//       title: "Edit",
-//       page: "reservation-edit",
-//       reservation: combinedData,
-//       displayName: "",
-//     });
-
-//     // Now you can use `combinedData` for further processing or return it as needed
-//   } catch (err) {
-//     console.error(err);
-//     return res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
-
+    res.redirect("/reservation-list");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 export default router;

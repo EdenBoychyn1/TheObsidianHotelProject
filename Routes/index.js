@@ -76,6 +76,17 @@ router.get("/add", function (req, res, next) {
         displayName: "",
     });
 });
+router.get("/delete/:EmailAddress", async function (req, res, next) {
+    try {
+        let emailAddress = req.params.EmailAddress;
+        await reservation_1.default.deleteOne({ EmailAddress: emailAddress });
+        res.redirect("/reservation-list");
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
     const emailAddress = req.params.EmailAddress;
     try {
@@ -120,6 +131,41 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
     catch (err) {
         console.error(err);
         return res.status(500).json({ error: "Internal Server Error" });
+    }
+});
+router.post("./reservation-edit/:EmailAddress/:id", async (req, res, next) => {
+    try {
+        let emailAddress = req.params.EmailAddress;
+        let id = req.params.id;
+        let address = req.body.inputAddress;
+        let addressSplit = address.split(" ");
+        let streetNumber = addressSplit[0];
+        let streetName = addressSplit[1];
+        for (let i = 2; i < addressSplit.length; i++) {
+            streetName += " " + addressSplit[i];
+        }
+        let updatedReservation = new reservation_1.default({
+            _id: id,
+            ReservationStartDate: req.body.inputCheckInDate,
+            ReservationEndDate: req.body.inputCheckOutDate,
+            NumberOfGuests: req.body.inputPax,
+            RoomNumber: 1,
+            BillingUnitNumber: req.body.inputUnitNumber,
+            BillingStreetNumber: streetNumber,
+            BillingStreetName: streetName,
+            BillingCity: req.body.inputCity,
+            BillingProvince: req.body.inputProvince,
+            BillingCountry: req.body.inputCountry,
+            BillingPostalCode: req.body.inputPostalCode,
+            EmailAddress: emailAddress,
+        });
+        console.log(` Updated Reservation: ${updatedReservation}`);
+        await reservation_1.default.updateOne({ _id: id }, updatedReservation);
+        res.redirect("/reservation-list");
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
     }
 });
 exports.default = router;
