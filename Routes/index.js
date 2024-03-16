@@ -133,10 +133,16 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 });
-router.post("./reservation-edit/:EmailAddress/:id", async (req, res, next) => {
+router.post("/reservation-edit/:EmailAddress", async (req, res, next) => {
+    console.log("Hello");
     try {
         let emailAddress = req.params.EmailAddress;
-        let id = req.params.id;
+        let reservationStartDate = req.body.inputCheckInDate;
+        let reservationEndDate = req.body.inputCheckOutDate;
+        let billingUnitNumber = req.body.inputUnitNumber;
+        let billingCity = req.body.inputCity;
+        let billingProvince = req.body.inputProvince;
+        let billingPostalCode = req.body.inputPostalCode;
         let address = req.body.inputAddress;
         let addressSplit = address.split(" ");
         let streetNumber = addressSplit[0];
@@ -144,23 +150,20 @@ router.post("./reservation-edit/:EmailAddress/:id", async (req, res, next) => {
         for (let i = 2; i < addressSplit.length; i++) {
             streetName += " " + addressSplit[i];
         }
-        let updatedReservation = new reservation_1.default({
-            _id: id,
-            ReservationStartDate: req.body.inputCheckInDate,
-            ReservationEndDate: req.body.inputCheckOutDate,
-            NumberOfGuests: req.body.inputPax,
-            RoomNumber: 1,
-            BillingUnitNumber: req.body.inputUnitNumber,
-            BillingStreetNumber: streetNumber,
-            BillingStreetName: streetName,
-            BillingCity: req.body.inputCity,
-            BillingProvince: req.body.inputProvince,
-            BillingCountry: req.body.inputCountry,
-            BillingPostalCode: req.body.inputPostalCode,
-            EmailAddress: emailAddress,
-        });
-        console.log(` Updated Reservation: ${updatedReservation}`);
-        await reservation_1.default.updateOne({ _id: id }, updatedReservation);
+        console.log(`Updated Reservation: ${reservationStartDate}`);
+        let updatedReservation = await reservation_1.default.findOneAndUpdate({ EmailAddress: emailAddress }, {
+            $set: {
+                ReservationStartDate: reservationStartDate,
+                ReservationEndDate: reservationEndDate,
+                BillingUnitNumber: billingUnitNumber,
+                BillingStreetNumber: streetNumber,
+                BillingStreetName: streetName,
+                BillingCity: billingCity,
+                BillingProvince: billingProvince,
+                BillingPostalCode: billingPostalCode,
+            },
+        }).exec();
+        console.log(`Billing Province ${updatedReservation?.BillingProvince}`);
         res.redirect("/reservation-list");
     }
     catch (error) {

@@ -266,8 +266,8 @@
 
           let guest_data = localStorage.getItem(key);
           let newGuest = new core.Guest();
-          newGuest.deserialize(guest_data);
 
+          console.log(emailAddress);
           if (newGuest.SecurityLevel === "guest") {
             document.getElementById("inputReservationFirstName").value = newGuest.FirstName;
             document.getElementById("inputReservationLastName").value = newGuest.LastName;
@@ -278,6 +278,8 @@
             document.getElementById("inputCountry").value = newGuest.Country;
             document.getElementById("inputPostalCode").value = newGuest.PostalCode;
           }
+          let emailAddress = newGuest.deserialize(guest_data.indexOf(11));
+          console.log(`localstorage email: ${emailAddress}`)
         }
       }
       else if (!userGuest.checked) {
@@ -344,40 +346,38 @@
 
     console.log("Reservations Page");
 
-    RetrieveGuestDetails();
+    // RetrieveGuestDetails();
 
-    document.getElementsByClassName("btn btn-primary")[0].addEventListener("click", function () {
-      let guestFirstName = document.getElementById("inputReservationFirstName").value;
-      let guestLastName = document.getElementById("inputReservationLastName").value;
-      let unitNumber = document.getElementById("inputUnitNumber").value;
-      let streetNumber = AddressNumberSplit(document.getElementById("inputAddress").value);
-      let streetName = AddressSplit(document.getElementById("inputAddress").value);
-      let city = document.getElementById("inputCity").value;
-      let province = document.getElementById("inputProvince").value;
-      let country = document.getElementById("inputCountry").value;
-      let postalCode = document.getElementById("inputPostalCode").value;
-      let checkInDate = document.getElementById("inputCheckInDate").value;
-      let checkOutDate = document.getElementById("inputCheckOutDate").value;
-      let numberofPeople = document.getElementById("inputPax").value;
-      let roomType = document.getElementById("inputRoomType").value;
-      let dateCreated;
-      let lastUpdated;
-      let roomNumber = 1;
+    // document.getElementsByClassName("btn btn-primary")[0].addEventListener("click", function () {
 
-      // Let the username which is also the email be the key
-      let key = guestLastName + Date.now();
+    //   let unitNumber = document.getElementById("inputUnitNumber").value;
+    //   let streetNumber = AddressNumberSplit(document.getElementById("inputAddress").value);
+    //   let streetName = AddressSplit(document.getElementById("inputAddress").value);
+    //   let city = document.getElementById("inputCity").value;
+    //   let province = document.getElementById("inputProvince").value;
+    //   let country = document.getElementById("inputCountry").value;
+    //   let postalCode = document.getElementById("inputPostalCode").value;
+    //   let checkInDate = document.getElementById("inputCheckInDate").value;
+    //   let checkOutDate = document.getElementById("inputCheckOutDate").value;
+    //   let numberofPeople = document.getElementById("inputPax").value;
+    //   let roomType = document.getElementById("inputRoomType").value;
 
-      let newReservation = new core.Reservation(key, checkInDate, checkOutDate, numberofPeople, roomNumber, unitNumber, streetNumber, streetName, city, province, country, postalCode, dateCreated, lastUpdated);
+    //   let roomNumber = 1;
 
-      if (newReservation.serialize()) {
+    //   // Let the username which is also the email be the key
+    //   let key = guestLastName + Date.now();
 
-        // Store the key in local storage 
-        localStorage.setItem(key, newReservation.serialize());
-      }
+    //   let newReservation = new core.Reservation(checkInDate, checkOutDate, numberofPeople, roomNumber, unitNumber, streetNumber, streetName, city, province, country, postalCode,);
 
-      console.log(`New Reservation: ${newReservation.toString()
-        } `)
-    });
+    //   if (newReservation.serialize()) {
+
+    //     // Store the key in local storage 
+    //     localStorage.setItem(key, newReservation.serialize());
+    //   }
+
+    //   console.log(`New Reservation: ${newReservation.toString()
+    //     } `)
+    // });
 
   }
 
@@ -557,14 +557,13 @@
     //   reservationList.innerHTML = data;
 
 
-    //   $("button.delete").on("click", function () {
-    //     if (confirm("Are you sure?")) {
-    //       localStorage.removeItem($(this).val());
-    //     }
-
-    //     // refresh after deleting
-    //     location.href = "/reservation-list";
-    //   });
+    $("a.delete").on("click", function (event) {
+      if (!confirm("Are you sure?")) {
+        event.preventDefault();
+        // refresh after deleting
+        location.href = "/reservation-list";
+      }
+    });
 
     //   $("button.edit").on("click", function () {
     //     location.href = "/reservation-edit#" + $(this).val();
@@ -578,43 +577,43 @@
   function DisplayReservationEditPage() {
     console.log("Reservation Edit Page");
 
-    let substring = location.hash.substring(1);
+    // let substring = location.hash.substring(1);
 
-    let editReservation = new core.Reservation();
+    // let editReservation = new core.Reservation();
 
-    editReservation.deserialize(localStorage.getItem(substring));
+    // editReservation.deserialize(localStorage.getItem(substring));
 
-    document.getElementById("inputReservationFirstName").value = editReservation.FirstName;
-    document.getElementById("inputReservationLastName").value = editReservation.LastName;
-    document.getElementById("inputAddress").value = `${editReservation.BillingStreetNumber} ${editReservation.BillingStreetName} `;
-    document.getElementById("inputUnitNumber").value = editReservation.BillingUnitNumber;
-    document.getElementById("inputCity").value = editReservation.BillingCity;
-    document.getElementById("inputProvince").value = editReservation.BillingProvince;
-    document.getElementById("inputCountry").value = editReservation.BillingCountry;
-    document.getElementById("inputPostalCode").value = editReservation.BillingPostalCode;
-    document.getElementById("inputCheckInDate").value = editReservation.CheckInDate;
-    document.getElementById("inputCheckOutDate").value = editReservation.CheckOutDate;
-    document.getElementById("inputPax").value = editReservation.NumberOfGuests;
+    // document.getElementById("inputReservationFirstName").value = editReservation.FirstName;
+    // document.getElementById("inputReservationLastName").value = editReservation.LastName;
+    // document.getElementById("inputAddress").value = `${editReservation.BillingStreetNumber} ${editReservation.BillingStreetName} `;
+    // document.getElementById("inputUnitNumber").value = editReservation.BillingUnitNumber;
+    // document.getElementById("inputCity").value = editReservation.BillingCity;
+    // document.getElementById("inputProvince").value = editReservation.BillingProvince;
+    // document.getElementById("inputCountry").value = editReservation.BillingCountry;
+    // document.getElementById("inputPostalCode").value = editReservation.BillingPostalCode;
+    // document.getElementById("inputCheckInDate").value = editReservation.CheckInDate;
+    // document.getElementById("inputCheckOutDate").value = editReservation.CheckOutDate;
+    // document.getElementById("inputPax").value = editReservation.NumberOfGuests;
 
 
-    document.getElementById("editButton").addEventListener("click", function (event) {
+    // document.getElementById("editButton").addEventListener("click", function (event) {
 
-      event.preventDefault();
+    //   event.preventDefault();
 
-      editReservation.CheckInDate = document.getElementById("inputCheckInDate").value;
-      editReservation.CheckOutDate = document.getElementById("inputCheckOutDate").value;
-      editReservation.NumberOfGuests = document.getElementById("inputPax").value;
-      editReservation.BillingUnitNumber = document.getElementById("inputUnitNumber").value;
-      editReservation.BillingStreetNumber = AddressNumberSplit(document.getElementById("inputAddress").value);
-      editReservation.BillingStreetName = AddressSplit(document.getElementById("inputAddress").value);
-      editReservation.BillingCity = document.getElementById("inputCity").value;
-      editReservation.BillingProvince = document.getElementById("inputProvince").value;
-      editReservation.BillingCountry = document.getElementById("inputCountry").value;
-      editReservation.BillingPostalCode = document.getElementById("inputPostalCode").value;
+    //   editReservation.CheckInDate = document.getElementById("inputCheckInDate").value;
+    //   editReservation.CheckOutDate = document.getElementById("inputCheckOutDate").value;
+    //   editReservation.NumberOfGuests = document.getElementById("inputPax").value;
+    //   editReservation.BillingUnitNumber = document.getElementById("inputUnitNumber").value;
+    //   editReservation.BillingStreetNumber = AddressNumberSplit(document.getElementById("inputAddress").value);
+    //   editReservation.BillingStreetName = AddressSplit(document.getElementById("inputAddress").value);
+    //   editReservation.BillingCity = document.getElementById("inputCity").value;
+    //   editReservation.BillingProvince = document.getElementById("inputProvince").value;
+    //   editReservation.BillingCountry = document.getElementById("inputCountry").value;
+    //   editReservation.BillingPostalCode = document.getElementById("inputPostalCode").value;
 
-      localStorage.setItem(substring, editReservation.serialize());
-      location.href = "/reservation-list";
-    });
+    //   localStorage.setItem(substring, editReservation.serialize());
+    //   location.href = "/reservation-list";
+    // });
   }
 
   /**

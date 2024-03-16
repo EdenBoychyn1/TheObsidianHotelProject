@@ -10,14 +10,6 @@
 
     // getters and setters
 
-    get ReservationID() {
-      return this.m_reservationId;
-    }
-
-    set ReservationID(reservation_id) {
-      this.m_reservationId = reservation_id;
-    }
-
     get CheckInDate() {
       return this.m_checkInDate;
     }
@@ -106,20 +98,12 @@
       this.m_billingPostalCode = billing_postal_code;
     }
 
-    get DateCreated() {
-      return this.m_createdDate;
+    get EmailAddress() {
+      return this.m_emailAddress;
     }
 
-    set DateCreated(date_created) {
-      this.m_createdDate = Date.now();
-    }
-
-    get LastUpdate() {
-      return this.m_lastUpdate;
-    }
-
-    set LastUpdate(last_update) {
-      this.m_lastUpdate = Date.now();
+    set EmailAddress(email_address) {
+      this.m_emailAddress = email_address;
     }
 
     // Constructor
@@ -137,8 +121,8 @@
      * @param {string} [billingPostalCode=""]
      * @memberof Reservation
      */
-    constructor(reservationId = "", checkInDate = "", checkOutDate = "", numberOfGuests = 0, roomNumber = 0, billingUnitNumber = "", billingStreetNumber = "", billingStreetName = "", billingCity = "", billingProvince = "", billingCountry = "", billingPostalCode = "", dateCreated = "", lastUpdate = "") {
-      this.ReservationID = reservationId;
+    constructor(checkInDate = "", checkOutDate = "", numberOfGuests = 0, roomNumber = 0, billingUnitNumber = "", billingStreetNumber = "", billingStreetName = "", billingCity = "", billingProvince = "", billingCountry = "", billingPostalCode = "", emailAddress = "") {
+
       this.CheckInDate = checkInDate;
       this.CheckOutDate = checkOutDate;
       this.NumberOfGuests = numberOfGuests;
@@ -150,14 +134,13 @@
       this.BillingProvince = billingProvince;
       this.BillingCountry = billingCountry;
       this.BillingPostalCode = billingPostalCode;
-      this.DateCreated = dateCreated;
-      this.LastUpdate = lastUpdate;
+      this.EmailAddress = emailAddress;
     }
 
     serialize() {
       // Determining if the values are actually filled out by the user.
-      if (this.ReservationID !== "" && this.CheckInDate !== "" && this.CheckOutDate !== "" && this.NumberOfGuests !== "" && this.RoomNumber !== "" && this.BillingStreetNumber !== "" && this.BillingStreetName !== "" && this.BillingCity !== "" && this.BillingProvince !== "" && this.BillingCountry !== "" && this.BillingPostalCode !== "" && this.DateCreated !== "" && this.LastUpdate !== "") {
-        return `${this.ReservationID},${this.CheckInDate},${this.CheckOutDate},${this.NumberOfGuests},${this.RoomNumber},${this.BillingUnitNumber},${this.BillingStreetNumber},${this.BillingStreetName},${this.BillingCity},${this.BillingProvince},${this.BillingCountry},${this.BillingPostalCode},${this.DateCreated},${this.LastUpdate}`;
+      if (this.CheckInDate !== "" && this.CheckOutDate !== "" && this.NumberOfGuests !== "" && this.RoomNumber !== "" && this.BillingStreetNumber !== "" && this.BillingStreetName !== "" && this.BillingCity !== "" && this.BillingProvince !== "" && this.BillingCountry !== "" && this.BillingPostalCode !== "" && this.EmailAddress !== "") {
+        return `${this.CheckInDate},${this.CheckOutDate},${this.NumberOfGuests},${this.RoomNumber},${this.BillingUnitNumber},${this.BillingStreetNumber},${this.BillingStreetName},${this.BillingCity},${this.BillingProvince},${this.BillingCountry},${this.BillingPostalCode},${this.EmailAddress}`;
       }
 
       // Console error actually stops JavaScript from processing
@@ -167,27 +150,25 @@
 
     deserialize(data) {
       let propertyArray = data.split(",");
-      this.ReservationID = propertyArray[0];
-      this.CheckInDate = propertyArray[1];
-      this.CheckOutDate = propertyArray[2];
-      this.NumberOfGuests = propertyArray[3];
-      this.RoomNumber = propertyArray[4]
-      this.BillingUnitNumber = propertyArray[5];
-      this.BillingStreetNumber = propertyArray[6];
-      this.BillingStreetName = propertyArray[7];
-      this.BillingCity = propertyArray[8];
-      this.BillingProvince = propertyArray[9];
-      this.BillingCountry = propertyArray[10];
-      this.BillingPostalCode = propertyArray[11];
-      this.DateCreated = propertyArray[12];
-      this.LastUpdate = propertyArray[13];
+      this.CheckInDate = propertyArray[0];
+      this.CheckOutDate = propertyArray[1];
+      this.NumberOfGuests = propertyArray[2];
+      this.RoomNumber = propertyArray[3]
+      this.BillingUnitNumber = propertyArray[4];
+      this.BillingStreetNumber = propertyArray[5];
+      this.BillingStreetName = propertyArray[6];
+      this.BillingCity = propertyArray[7];
+      this.BillingProvince = propertyArray[8];
+      this.BillingCountry = propertyArray[9];
+      this.BillingPostalCode = propertyArray[10];
+      this.EmailAddress = propertyArray[11]
     }
 
     toString() {
       return `Check-In Date: ${this.CheckInDate} \nCheck-Out Date: ${this.CheckOutDate} \nNumber of Guests: ${this.NumberOfGuests}
     \nBilling Unit Number: ${this.BillingUnitNumber} \nBilling Street Number: ${this.BillingStreetNumber} \nBilling Street Name: ${this.BillingStreetName} 
     \nBilling City: ${this.BillingCity} \nBilling Province: ${this.BillingProvince} \nBilling Country: ${this.BillingCountry} 
-    \nBilling Postal Code: ${this.BillingPostalCode} \nReservation Created: ${this.DateCreated} \nReservation Updated: ${this.LastUpdate} `;
+    \nBilling Postal Code: ${this.BillingPostalCode} \nEmailAddress: ${this.EmailAddress} `;
     }
 
   }
