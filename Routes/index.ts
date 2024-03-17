@@ -3,6 +3,10 @@ const router = express.Router();
 
 import Reservation from "../Models/reservation";
 import Guest from "../Models/guest";
+import Room from "../Models/room";
+import Employee from "../Models/user";
+import mongoose from "mongoose";
+
 /* GET home page. */
 router.get("/", function (req, res, next) {
   res.render("index", { title: "Home", page: "home" });
@@ -63,10 +67,34 @@ router.get("/reservation", function (req, res, next) {
 
 /* GET Employee Register page */
 router.get("/employee-register", function (req, res, next) {
+  console.log("Hello");
   res.render("index", {
     title: "Employee Registration ",
     page: "employee-register",
   });
+});
+
+router.post("/employee-register", async (req, res, next) => {
+  try {
+    // let hashedPassword = window.btoa(req.body.password);
+
+    let newEmployee = new Employee({
+      FirstName: req.body.firstName,
+      LastName: req.body.lastName,
+      UserName: req.body.emailAddress,
+      SecurityLevel: "FrontDeskAgent",
+      EmailAddress: req.body.emailAddress,
+      Password: req.body.password,
+    });
+
+    console.log(newEmployee);
+    await newEmployee.save();
+
+    res.redirect("./login");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 /* GET Guest Register page */
@@ -75,6 +103,44 @@ router.get("/register", function (req, res, next) {
     title: "Guest Registration ",
     page: "register",
   });
+});
+
+router.post("/register", async (req, res, next) => {
+  try {
+    let address = req.body.inputAddress;
+
+    console.log(address);
+    let addressSplit = address.split(" ");
+    let streetNumber = addressSplit[0];
+    let streetName = addressSplit[1];
+    for (let i = 2; i < addressSplit.length; i++) {
+      streetName += " " + addressSplit[i];
+    }
+
+    let newGuest = new Guest({
+      FirstName: req.body.firstName,
+      LastName: req.body.lastName,
+      UserName: req.body.emailAddress,
+      SecurityLevel: "Guest",
+      EmailAddress: req.body.emailAddress,
+      Password: req.body.password,
+      UnitNumber: req.body.inputUnitNumber,
+      StreetNumber: streetNumber,
+      StreetName: streetName,
+      City: req.body.inputCity,
+      Province: req.body.inputProvince,
+      Country: req.body.inputCountry,
+      PostalCode: req.body.inputPostalCode,
+    });
+
+    console.log(newGuest);
+    await newGuest.save();
+
+    res.redirect("./login");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 router.get("/reservation-list", async (req, res, next) => {
@@ -102,6 +168,85 @@ router.get("/add", function (req, res, next) {
   });
 });
 
+router.get(
+  "/check-in/:EmailAddress/:ReservationStartDate/:ReservationEndDate/:RoomNumber/:id",
+  async function (req, res, next) {
+    try {
+      let id = req.params.id;
+      let emailAddress = req.params.EmailAddress;
+      let roomNumber = req.params.RoomNumber;
+      let reservationStartDate = req.params.ReservationStartDate;
+      let reservationEndDate = req.params.ReservationEndDate;
+
+      console.log(
+        `room number ${roomNumber}, Reservation Start Date: ${reservationStartDate}, Reservation End Date: ${reservationEndDate}`
+      );
+      // Define a variable to store the combined data
+      const findId = await Reservation.findById({
+        _id: id,
+      }).exec();
+
+      const checkedInReservation = await Reservation.aggregate([
+        {
+          $match: {
+            _id: new mongoose.Types.ObjectId(id), // Convert reservationId to ObjectId
+          },
+        },
+        {
+          $lookup: {
+            from: "rooms",
+            let: {
+              roomNumber: "$RoomNumber",
+              startDate: "$ReservationStartDate",
+              endDate: "$ReservationEndDate",
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      { $eq: ["$RoomNumber", roomNumber] },
+                      { $eq: ["$ReservationStartDate", reservationStartDate] },
+                      { $eq: ["$ReservationEndDate", reservationEndDate] },
+                    ],
+                  },
+                },
+              },
+            ],
+            as: "roomDetails",
+          },
+        },
+      ]);
+
+      checkedInReservation.forEach((mergedDocument, index) => {
+        console.log(`Merged Document ${index + 1}:`, mergedDocument);
+        // Access fields from the merged document
+        // console.log(`Reservation ID:`, mergedDocument.ReservationID);
+        console.log(`Room Details:`, mergedDocument.roomDetails[0]);
+
+        if (
+          Array.isArray(mergedDocument.roomDetails) &&
+          mergedDocument.roomDetails.length > 0
+        ) {
+          const matchedReso = mergedDocument.roomDetails[0]; // Get the first object from the array
+          if (matchedReso.RoomNumber) {
+            console.log(`Room Number:`, matchedReso.RoomNumber);
+          } else {
+            console.log(`Guest First Name is not available`);
+          }
+        } else {
+          console.log(`No guest information available`);
+        }
+      });
+
+      res.redirect("/reservation-list");
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
+
 // My Code that I spent 2 hours wondering why my delete middleware method wasn't working.
 router.get("/delete/:EmailAddress", async function (req, res, next) {
   try {
@@ -117,7 +262,7 @@ router.get("/delete/:EmailAddress", async function (req, res, next) {
 });
 
 router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
-  const emailAddress = req.params.EmailAddress;
+  let emailAddress = req.params.EmailAddress;
 
   try {
     // Define a variable to store the combined data
@@ -134,27 +279,7 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
         },
       },
     ]).exec();
-    reservation.forEach((mergedDocument, index) => {
-      console.log(`Merged Document ${index + 1}:`, mergedDocument);
-      // Access fields from the merged document
-      console.log(`Reservation ID:`, mergedDocument.ReservationID);
-      console.log(`Guest First Name:`, mergedDocument.guest[0].FirstName);
 
-      if (
-        Array.isArray(mergedDocument.guest) &&
-        mergedDocument.guest.length > 0
-      ) {
-        const firstGuest = mergedDocument.guest[0]; // Get the first object from the array
-        if (firstGuest.FirstName) {
-          console.log(`Guest First Name:`, firstGuest.FirstName);
-        } else {
-          console.log(`Guest First Name is not available`);
-        }
-      } else {
-        console.log(`No guest information available`);
-      }
-      // Access more fields as needed
-    });
     return res.render("index", {
       title: "Edit",
       page: "reservation-edit",

@@ -2,7 +2,7 @@
   <div class="offset-md-3 col-md-6 col-sm-12">
     <div class="login" id="contentArea">
       <h1 class="display-4">Register</h1>
-      <form class="row g-3" id="registerForm" novalidate>
+      <form method="POST" class="row g-3" id="registerForm" novalidate>
         <p class="hint-text">
           Create your own account. It's free and only takes a minute.
         </p>
@@ -97,6 +97,7 @@
             class="form-control"
             id="inputAddress"
             placeholder="Address"
+            name="inputAddress"
           />
         </div>
         <div class="col-md-6">
@@ -106,6 +107,7 @@
             class="form-control"
             id="inputCity"
             placeholder="City"
+            name="inputCity"
           />
         </div>
         <div class="col-md-3">
@@ -115,24 +117,27 @@
             class="form-control"
             id="inputUnitNumber"
             placeholder="Unit Number"
+            name="inputUnitNumber"
           />
         </div>
         <div class="col-md-4">
           <label for="inputProvince" class="form-label">Province</label>
-          <select id="inputProvince" class="form-select">
-            <option selected>Alberta</option>
-            <option>British Columbia</option>
-            <option>Manitoba</option>
-            <option>New Brunswick</option>
-            <option>Newfoundland and Labrador</option>
-            <option>Northwest Territories</option>
-            <option>Nova Scotia</option>
-            <option>Nunavut</option>
-            <option>Ontario</option>
-            <option>Prince Edward Island</option>
-            <option>Quebec</option>
-            <option>Saskatchewan</option>
-            <option>Yukon</option>
+          <select name="inputProvince" id="inputProvince" class="form-select">
+            <option value="Alberta" selected>Alberta</option>
+            <option value="British Columbia">British Columbia</option>
+            <option value="Manitoba">Manitoba</option>
+            <option value="New Brunswick">New Brunswick</option>
+            <option value="Newfoundland and Labrador">
+              Newfoundland and Labrador
+            </option>
+            <option value="Northwest Territories">Northwest Territories</option>
+            <option value="Nova Scotia">Nova Scotia</option>
+            <option value="Nunavut">Nunavut</option>
+            <option value="Ontario">Ontario</option>
+            <option value="Prince Edward Island">Prince Edward Island</option>
+            <option value="Quebec">Quebec</option>
+            <option value="Saskatchewan">Saskatchewan</option>
+            <option value="Yukon">Yukon</option>
           </select>
         </div>
         <div class="col-md-5">
@@ -142,6 +147,7 @@
             class="form-control"
             id="inputCountry"
             placeholder="Canada"
+            name="inputCountry"
           />
         </div>
         <div class="col-md-3">
@@ -151,6 +157,7 @@
             class="form-control"
             id="inputPostalCode"
             placeholder="Postal Code"
+            name="inputPostalCode"
           />
         </div>
 

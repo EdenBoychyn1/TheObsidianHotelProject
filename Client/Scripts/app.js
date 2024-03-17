@@ -141,28 +141,28 @@
       let passwordMatch = PasswordMatch();
 
 
-      if (firstNameValid === true && lastNameValid === true && emailAddressValid === true && passwordValid === true && confirmPasswordValid === true && passwordMatch === true) {
-        if (document.getElementById("termsAndConditionsCheckbox").checked) {
+      // if (firstNameValid === true && lastNameValid === true && emailAddressValid === true && passwordValid === true && confirmPasswordValid === true && passwordMatch === true) {
+      //   if (document.getElementById("termsAndConditionsCheckbox").checked) {
 
-          let firstName = document.getElementById("firstName").value;
-          let lastName = document.getElementById("lastName").value;
-          let emailAddress = document.getElementById("emailAddress").value;
-          let password = window.btoa(document.getElementById("password").value);
-          let security_level;
-          let userName = emailAddress;
+      //     let firstName = document.getElementById("firstName").value;
+      //     let lastName = document.getElementById("lastName").value;
+      //     let emailAddress = document.getElementById("emailAddress").value;
+      //     let password = window.btoa(document.getElementById("password").value);
+      //     let security_level;
+      //     let userName = emailAddress;
 
-          security_level = "front_desk_agent";
-          user = new core.User(firstName, lastName, userName, emailAddress, security_level, password);
-          let key = userName;
-          // Store the key in local storage 
-          localStorage.setItem(key, user.serialize());
+      //     security_level = "FrontDeskAgent";
+      //     user = new core.User(firstName, lastName, userName, emailAddress, security_level, password);
+      //     let key = userName;
+      //     // Store the key in local storage 
+      //     localStorage.setItem(key, user.serialize());
 
-          document.getElementById("registerForm").reset();
-        }
-      }
-      else {
-        event.preventDefault();
-      }
+      //     document.getElementById("registerForm").reset();
+      //   }
+      // }
+      // else {
+      //   event.preventDefault();
+      // }
     });
   }
 
@@ -501,7 +501,7 @@
     console.log("Register Page");
 
     // Invoke the UserRegistration() method
-    GuestUserRegistration();
+    // GuestUserRegistration();
   }
 
   /**
@@ -513,7 +513,7 @@
     console.log("Employee Register Page");
 
     // Invoke the UserRegistration() method
-    UserRegistration();
+    // UserRegistration();
   }
 
   function DisplayReservationListPage() {
