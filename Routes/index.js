@@ -7,8 +7,8 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const reservation_1 = __importDefault(require("../Models/reservation"));
 const guest_1 = __importDefault(require("../Models/guest"));
+const room_1 = __importDefault(require("../Models/room"));
 const user_1 = __importDefault(require("../Models/user"));
-const mongoose_1 = __importDefault(require("mongoose"));
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Home", page: "home" });
 });
@@ -133,65 +133,23 @@ router.get("/add", function (req, res, next) {
         displayName: "",
     });
 });
-router.get("/check-in/:EmailAddress/:ReservationStartDate/:ReservationEndDate/:RoomNumber/:id", async function (req, res, next) {
+router.get("/check-in/:ReservationID", async function (req, res, next) {
     try {
-        let id = req.params.id;
-        let emailAddress = req.params.EmailAddress;
-        let roomNumber = req.params.RoomNumber;
-        let reservationStartDate = req.params.ReservationStartDate;
-        let reservationEndDate = req.params.ReservationEndDate;
-        console.log(`room number ${roomNumber}, Reservation Start Date: ${reservationStartDate}, Reservation End Date: ${reservationEndDate}`);
-        const findId = await reservation_1.default.findById({
-            _id: id,
-        }).exec();
-        const checkedInReservation = await reservation_1.default.aggregate([
-            {
-                $match: {
-                    _id: new mongoose_1.default.Types.ObjectId(id),
-                },
-            },
-            {
-                $lookup: {
-                    from: "rooms",
-                    let: {
-                        roomNumber: "$RoomNumber",
-                        startDate: "$ReservationStartDate",
-                        endDate: "$ReservationEndDate",
-                    },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        { $eq: ["$RoomNumber", roomNumber] },
-                                        { $eq: ["$ReservationStartDate", reservationStartDate] },
-                                        { $eq: ["$ReservationEndDate", reservationEndDate] },
-                                    ],
-                                },
-                            },
-                        },
-                    ],
-                    as: "roomDetails",
-                },
-            },
-        ]);
-        checkedInReservation.forEach((mergedDocument, index) => {
-            console.log(`Merged Document ${index + 1}:`, mergedDocument);
-            console.log(`Room Details:`, mergedDocument.roomDetails[0]);
-            if (Array.isArray(mergedDocument.roomDetails) &&
-                mergedDocument.roomDetails.length > 0) {
-                const matchedReso = mergedDocument.roomDetails[0];
-                if (matchedReso.RoomNumber) {
-                    console.log(`Room Number:`, matchedReso.RoomNumber);
-                }
-                else {
-                    console.log(`Guest First Name is not available`);
-                }
-            }
-            else {
-                console.log(`No guest information available`);
-            }
-        });
+        let reservationId = req.params.ReservationID;
+        const roomReservationId = await room_1.default.findOneAndUpdate({ ReservationID: reservationId }, { $set: { RoomStatus: "CheckedIn" } }).exec();
+        console.log(`ReservationID: ${roomReservationId?.ReservationID}, Room Status: ${roomReservationId?.RoomStatus}`);
+        res.redirect("/reservation-list");
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+router.get("/check-out/:ReservationID", async function (req, res, next) {
+    try {
+        let reservationId = req.params.ReservationID;
+        const roomReservationId = await room_1.default.findOneAndUpdate({ ReservationID: reservationId }, { $set: { RoomStatus: "CheckedOut" } }).exec();
+        console.log(`ReservationID: ${roomReservationId?.ReservationID}, Room Status: ${roomReservationId?.RoomStatus}`);
         res.redirect("/reservation-list");
     }
     catch (error) {

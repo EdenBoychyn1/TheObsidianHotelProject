@@ -18,8 +18,6 @@ const ReservationSchema = new Schema({
     BillingProvince: String,
     BillingCountry: String,
     BillingPostalCode: String,
-    DateCreated: Number,
-    LastUpdate: Number,
     EmailAddress: String,
 }, {
     collection: "reservations",

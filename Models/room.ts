@@ -11,6 +11,7 @@ const RoomSchema = new Schema(
     RoomPrice: Number,
     RoomStatus: String,
     RoomAccessible: Boolean,
+    ReservationID: String,
   },
   {
     collection: "rooms",

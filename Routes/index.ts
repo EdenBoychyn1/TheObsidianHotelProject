@@ -168,84 +168,47 @@ router.get("/add", function (req, res, next) {
   });
 });
 
-router.get(
-  "/check-in/:EmailAddress/:ReservationStartDate/:ReservationEndDate/:RoomNumber/:id",
-  async function (req, res, next) {
-    try {
-      let id = req.params.id;
-      let emailAddress = req.params.EmailAddress;
-      let roomNumber = req.params.RoomNumber;
-      let reservationStartDate = req.params.ReservationStartDate;
-      let reservationEndDate = req.params.ReservationEndDate;
+router.get("/check-in/:ReservationID", async function (req, res, next) {
+  try {
+    let reservationId = req.params.ReservationID;
 
-      console.log(
-        `room number ${roomNumber}, Reservation Start Date: ${reservationStartDate}, Reservation End Date: ${reservationEndDate}`
-      );
-      // Define a variable to store the combined data
-      const findId = await Reservation.findById({
-        _id: id,
-      }).exec();
+    // Define a variable to store the combined data
+    const roomReservationId = await Room.findOneAndUpdate(
+      { ReservationID: reservationId },
+      { $set: { RoomStatus: "CheckedIn" } }
+    ).exec();
 
-      const checkedInReservation = await Reservation.aggregate([
-        {
-          $match: {
-            _id: new mongoose.Types.ObjectId(id), // Convert reservationId to ObjectId
-          },
-        },
-        {
-          $lookup: {
-            from: "rooms",
-            let: {
-              roomNumber: "$RoomNumber",
-              startDate: "$ReservationStartDate",
-              endDate: "$ReservationEndDate",
-            },
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    $and: [
-                      { $eq: ["$RoomNumber", roomNumber] },
-                      { $eq: ["$ReservationStartDate", reservationStartDate] },
-                      { $eq: ["$ReservationEndDate", reservationEndDate] },
-                    ],
-                  },
-                },
-              },
-            ],
-            as: "roomDetails",
-          },
-        },
-      ]);
+    console.log(
+      `ReservationID: ${roomReservationId?.ReservationID}, Room Status: ${roomReservationId?.RoomStatus}`
+    );
 
-      checkedInReservation.forEach((mergedDocument, index) => {
-        console.log(`Merged Document ${index + 1}:`, mergedDocument);
-        // Access fields from the merged document
-        // console.log(`Reservation ID:`, mergedDocument.ReservationID);
-        console.log(`Room Details:`, mergedDocument.roomDetails[0]);
-
-        if (
-          Array.isArray(mergedDocument.roomDetails) &&
-          mergedDocument.roomDetails.length > 0
-        ) {
-          const matchedReso = mergedDocument.roomDetails[0]; // Get the first object from the array
-          if (matchedReso.RoomNumber) {
-            console.log(`Room Number:`, matchedReso.RoomNumber);
-          } else {
-            console.log(`Guest First Name is not available`);
-          }
-        } else {
-          console.log(`No guest information available`);
-        }
-      });
-
-      res.redirect("/reservation-list");
-    } catch (error) {
-      console.log(error);
-      res.status(500).send("Internal Server Error");
-    }
+    res.redirect("/reservation-list");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
   }
-);
+});
+
+router.get("/check-out/:ReservationID", async function (req, res, next) {
+  try {
+    let reservationId = req.params.ReservationID;
+
+    // Define a variable to store the combined data
+    const roomReservationId = await Room.findOneAndUpdate(
+      { ReservationID: reservationId },
+      { $set: { RoomStatus: "CheckedOut" } }
+    ).exec();
+
+    console.log(
+      `ReservationID: ${roomReservationId?.ReservationID}, Room Status: ${roomReservationId?.RoomStatus}`
+    );
+
+    res.redirect("/reservation-list");
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+  }
+});
 
 // My Code that I spent 2 hours wondering why my delete middleware method wasn't working.
 router.get("/delete/:EmailAddress", async function (req, res, next) {

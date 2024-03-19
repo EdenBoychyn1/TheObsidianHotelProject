@@ -29,8 +29,8 @@
           <td><%= reservations[count].NumberOfGuests %></td>
           <td class="text-center"><a href="/reservation-edit/<%= reservations[count].EmailAddress %>" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>Update Reservation</button></td>
           <td class="text-center"><a href="/delete/<%= reservations[count].EmailAddress %>" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>Delete Reservation</button></td>
-          <td class="text-center"><a href="/check-in/<%= reservations[count].EmailAddress %>/<%= reservations[count].ReservationStartDate %>/<%= reservations[count].ReservationEndDate %>/<%= reservations[count].RoomNumber %>/<%= reservations[count]._id %>" class="btn btn-dark btn-sm"><i class="fas fa-trash-alt fa-sm"></i>Check-In</button></td>
-          <td class="text-left"><a href="/check-out/<%= reservations[count].EmailAddress %>" class="btn btn-dark btn-sm"><i class="fas fa-trash-alt fa-sm"></i>Check-Out</button></td>
+          <td class="text-center"><a href="/check-in/<%= reservations[count].ReservationID %>" class="btn btn-dark btn-sm"><i class="fas fa-trash-alt fa-sm"></i>Check-In</button></td>
+          <td class="text-left"><a href="/check-out/<%= reservations[count].ReservationID %>" class="btn btn-dark btn-sm"><i class="fas fa-trash-alt fa-sm"></i>Check-Out</button></td>
         </tr> 
           <% } %>
       </tbody>

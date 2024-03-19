@@ -8,7 +8,8 @@
       "RoomType": "TWN ROOM",
       "RoomPrice": 100.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": "Boychyn1708909725738"
     },
     {
       "RoomNumber": 2,
@@ -18,7 +19,8 @@
       "RoomType": "TWN ROOM",
       "RoomPrice": 100.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": "Doe1708909725738"
     },
     {
       "RoomNumber": 3,
@@ -28,7 +30,8 @@
       "RoomType": "DBL ROOM",
       "RoomPrice": 110.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": "Admin1708909725738"
     },
     {
       "RoomNumber": 4,
@@ -38,7 +41,8 @@
       "RoomType": "DBL ROOM",
       "RoomPrice": 110.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": ""
     },
     {
       "RoomNumber": 5,
@@ -48,7 +52,8 @@
       "RoomType": "QUEEN ROOM",
       "RoomPrice": 150.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": ""
     },
     {
       "RoomNumber": 6,
@@ -58,7 +63,8 @@
       "RoomType": "QUEEN ROOM",
       "RoomPrice": 150.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": ""
     },
     {
       "RoomNumber": 7,
@@ -68,7 +74,8 @@
       "RoomType": "KING ROOM",
       "RoomPrice": 150.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": ""
     },
     {
       "RoomNumber": 8,
@@ -78,7 +85,8 @@
       "RoomType": "KING ROOM",
       "RoomPrice": 150.0,
       "RoomStatus": "Open",
-      "RoomAccessible": "Yes"
+      "RoomAccessible": "Yes",
+      "ReservationID": ""
     }
   ]
 }

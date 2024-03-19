@@ -13,8 +13,6 @@
       "BillingProvince": "Ontario",
       "BillingCountry": "Canada",
       "BillingPostalCode": "K8P4R6",
-      "DateCreated": "1708909725738",
-      "LastUpdate": "1708909725738",
       "EmailAddress": "Eden_Boychyn@hotmail.com"
     },
     {
@@ -30,8 +28,6 @@
       "BillingProvince": "Ontario",
       "BillingCountry": "Canada",
       "BillingPostalCode": "L1J2K5",
-      "DateCreated": "1708909725738",
-      "LastUpdate": "1708909725738",
       "EmailAddress": "John_Smith@hotmail.com"
     },
     {
@@ -47,8 +43,6 @@
       "BillingProvince": "Ontario",
       "BillingCountry": "Canada",
       "BillingPostalCode": "L1G0C5",
-      "DateCreated": "1708909725738",
-      "LastUpdate": "1708909725738",
       "EmailAddress": "Admin@hotmail.com"
     }
   ]
