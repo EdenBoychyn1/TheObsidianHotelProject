@@ -1,0 +1,172 @@
+<h1 class="primary-heading">
+  <i class="fa-solid fa-hotel"></i> <%= title %> Reservation
+</h1>
+<div class="row justify-content-lg-center g-3">
+  <form method="POST" class="row g-3">
+    <div class="col-md-6">
+      <label for="inputReservationFirstName" class="form-label"
+        >Guest First Name:
+      </label>
+      <input
+        name="inputReservationFirstName"
+        value=""
+        type="text"
+        placeholder="First Name"
+        class="form-control"
+        id="inputReservationFirstName"
+      />
+    </div>
+
+    <div class="col-md-6">
+      <label for="inputReservationLastName" class="form-label"
+        >Guest Last Name:</label
+      >
+      <input
+        name="inputReservationLastName"
+        value=""
+        type="text"
+        placeholder="Last Name"
+        class="form-control"
+        id="inputReservationLastName"
+      />
+    </div>
+    <div class="col-10">
+      <label for="inputAddress" class="form-label">Address</label>
+      <input
+        name="inputAddress"
+        value=""
+        type="text"
+        class="form-control"
+        id="inputAddress"
+        placeholder="1234 Main St"
+      />
+    </div>
+    <div class="col-2">
+      <label for="inputUnitNumber" class="form-label">Unit Number</label>
+      <input
+        name="inputUnitNumber"
+        value=""
+        type="text"
+        class="form-control"
+        id="inputUnitNumber"
+        placeholder="Unit 200"
+      />
+    </div>
+    <div class="col-5">
+      <label for="inputEmailAddress" class="form-label">Email Address</label>
+      <input
+        name="inputEmailAddress"
+        value=""
+        type="text"
+        class="form-control"
+        id="inputEmailAddress"
+        placeholder="john.doe@example.com"
+      />
+    </div>
+    <div class="col-md-2">
+      <label for="inputCity" class="form-label">City</label>
+      <input
+        name="inputCity"
+        value=""
+        type="text"
+        class="form-control"
+        id="inputCity"
+      />
+    </div>
+    <div class="col-md-2">
+      <label for="inputProvince" class="form-label">Province</label>
+      <select name="inputProvince" id="inputProvince" class="form-select">
+        <option value="Alberta"></option>Alberta</option> 
+        <option value="British Columbia">British Columbia</option>
+        <option value="Manitoba">Manitoba</option>
+        <option value="New Brunswick">New Brunswick</option>
+        <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+        <option value="Northwest Territories">Northwest Territories</option>
+        <option value="Nova Scotia">Nova Scotia</option>
+        <option value="Nunavut">Nunavut</option>
+        <option value="Ontario">Ontario</option>
+        <option value="Prince Edward Island">Prince Edward Island</option>
+        <option value="Quebec">Quebec</option>
+        <option value="Saskatchewan">Saskatchewan</option>
+        <option value="Yukon">Yukon</option>
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="inputCountry" class="form-label">Country</label>
+      <select
+        value=""
+        id="inputCountry"
+        class="form-select"
+        name="inputCountry"
+      >
+        <option value="Canada" selected>Canada</option>
+      </select>
+    </div>
+    <div class="col-md-1">
+      <label for="inputPostalCode" class="form-label">Postal Code</label>
+      <input
+        name="inputPostalCode"
+        value=""
+        type="text"
+        class="form-control"
+        id="inputPostalCode"
+      />
+    </div>
+
+    <div class="col-md-3">
+      <label for="inputCheckInDate" class="form-label">Check In Date:</label>
+      <input
+        name="inputCheckInDate"
+        value=""
+        type="date"
+        class="form-control"
+        id="inputCheckInDate"
+      />
+    </div>
+    <div class="col-md-3">
+      <label for="inputCheckOutDate" class="form-label">Check Out Date:</label>
+      <input
+        name="inputCheckOutDate"
+        value=""
+        type="date"
+        class="form-control"
+        id="inputCheckOutDate"
+      />
+    </div>
+    <div class="col-md-2">
+      <label for="inputPax" class="form-label">Number of Guests</label>
+      <select
+        name="inputPax"
+        value=""
+        id="inputPax"
+        class="form-select"
+      >
+        <option>1</option>
+        <option selected>2</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label for="inputRoomType" class="form-label">Room Type:</label>
+      <select name="inputRoomType" id="inputRoomType" class="form-select">
+        <option value="TWN ROOM">Twin Room with Beach View</option>
+        <option value="DBL ROOM" selected>Double Room with Beach View</option>
+        <option value="QUEEN ROOM">Queen Room with Balcony & Beach View</option>
+        <option value="KING ROOM">King Ensuite with Balcony & Beach View</option>
+      </select>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary" id="addButton">
+        Create Booking
+      </button>
+
+      <a
+        href="/reservation-list"
+        type="button"
+        class="btn btn-warning"
+        id="resetButton"
+      >
+        Reset Changes
+      </a>
+    </div>
+  </form>
+</div>

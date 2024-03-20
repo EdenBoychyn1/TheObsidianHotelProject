@@ -125,13 +125,119 @@ router.get("/reservation-list", async (req, res, next) => {
         res.status(500).send("Internal Server Error");
     }
 });
-router.get("/add", function (req, res, next) {
+router.get("/reservation-add", function (req, res, next) {
     res.render("index", {
         title: "Add",
-        page: "reservation-edit",
+        page: "reservation-add",
         reservation: "",
         displayName: "",
     });
+});
+router.post("/reservation-add", async function (req, res, next) {
+    try {
+        let firstName = req.body.inputReservationFirstName;
+        let lastName = req.body.inputReservationLastName;
+        let unitNumber = req.body.inputUnitNumber;
+        let city = req.body.inputCity;
+        let province = req.body.inputProvince;
+        let country = req.body.inputCountry;
+        let postalCode = req.body.inputPostalCode;
+        let reservationStartDate = req.body.inputCheckInDate;
+        let reservationEndDate = req.body.inputCheckOutDate;
+        let numberOfGuests = req.body.inputPax;
+        let roomType = req.body.inputRoomType;
+        let reservationId = req.body.inputReservationLastName + Date.now();
+        let emailAddress = req.body.inputEmailAddress;
+        let address = req.body.inputAddress;
+        let addressSplit = address.split(" ");
+        let streetNumber = addressSplit[0];
+        let streetName = addressSplit[1];
+        for (let i = 2; i < addressSplit.length; i++) {
+            streetName += " " + addressSplit[i];
+        }
+        const roomCollection = await room_1.default.find({ RoomType: roomType }).exec();
+        console.log(`Country ${country}`);
+        for (let index = 0; index < roomCollection.length; index++) {
+            console.log(`Index: ${index + 1}, \n ${roomCollection[index]}`);
+            const documentsReservationStartDate = roomCollection[index].ReservationStartDate;
+            const documentsReservationEndDate = roomCollection[index].ReservationEndDate;
+            const documentsRoomNumber = roomCollection[index].RoomNumber;
+            const documentsRoomDescription = roomCollection[index].RoomDescription;
+            const documentsRoomPrice = roomCollection[index].RoomPrice;
+            const documentsRoomAccessible = roomCollection[index].RoomAccessible;
+            if (documentsReservationStartDate && documentsReservationEndDate) {
+                if (reservationStartDate === documentsReservationStartDate) {
+                    console.log("Same Reservation Start Date as matched reservation Start Date. Therefore cannot book");
+                }
+                else if (reservationEndDate === documentsReservationEndDate) {
+                    console.log("Same Reservation End Date as matched reservation End Date. Therefore cannot book");
+                }
+                else if (reservationStartDate === documentsReservationStartDate &&
+                    reservationEndDate === documentsReservationEndDate) {
+                    console.log("Same Reservation Start Date & End Date. Therefore cannot book");
+                }
+                else if (reservationStartDate >= documentsReservationStartDate &&
+                    reservationEndDate <= documentsReservationEndDate) {
+                    console.log("Same Reservation Start Date is greater than the matched reservation start date & less than the matched reservation End Date. Therefore cannot book");
+                }
+                else {
+                    let newReservation = new reservation_1.default({
+                        ReservationID: reservationId,
+                        ReservationStartDate: reservationStartDate,
+                        ReservationEndDate: reservationEndDate,
+                        NumberOfGuests: numberOfGuests,
+                        RoomNumber: documentsRoomNumber,
+                        BillingUnitNumber: unitNumber,
+                        BillingStreetNumber: streetNumber,
+                        BillingStreetName: streetName,
+                        BillingCity: city,
+                        BillingProvince: province,
+                        BillingCountry: country,
+                        BillingPostalCode: postalCode,
+                        EmailAddress: emailAddress,
+                    });
+                    let newGuest = new guest_1.default({
+                        FirstName: firstName,
+                        LastName: lastName,
+                        UserName: "",
+                        SecurityLevel: "Guest",
+                        EmailAddress: emailAddress,
+                        Password: "",
+                        UnitNumber: unitNumber,
+                        StreetNumber: streetNumber,
+                        StreetName: streetName,
+                        City: city,
+                        Province: province,
+                        Country: country,
+                        PostalCode: postalCode,
+                        DateCreated: Date.now(),
+                        LastUpdate: Date.now(),
+                    });
+                    let newRoomReservation = new room_1.default({
+                        RoomNumber: documentsRoomNumber,
+                        ReservationStartDate: reservationStartDate,
+                        ReservationEndDate: reservationEndDate,
+                        RoomDescription: documentsRoomDescription,
+                        RoomType: roomType,
+                        RoomPrice: documentsRoomPrice,
+                        RoomStatus: "Reserved",
+                        RoomAccessible: documentsRoomAccessible,
+                        ReservationID: reservationId,
+                    });
+                    console.log(`New Guest: ${newGuest}`);
+                    await newGuest.save();
+                    await newReservation.save();
+                    await newRoomReservation.save();
+                    break;
+                }
+            }
+        }
+        console.log(`ReservationID: ${reservationId}`);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 router.get("/check-in/:ReservationID", async function (req, res, next) {
     try {
