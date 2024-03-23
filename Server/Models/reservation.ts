@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { ReservationDoc } from "./IReservation";
 const Schema = mongoose.Schema; // strucuture for a class
 
 const ReservationSchema = new Schema(
@@ -22,5 +23,5 @@ const ReservationSchema = new Schema(
   }
 );
 
-const Model = mongoose.model("Reservation", ReservationSchema);
+const Model = mongoose.model<ReservationDoc>("Reservation", ReservationSchema);
 export default Model;

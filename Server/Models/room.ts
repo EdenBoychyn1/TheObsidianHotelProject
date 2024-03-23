@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { RoomDoc } from "./IRoom";
 const Schema = mongoose.Schema; // strucuture for a class
 
 const RoomSchema = new Schema(
@@ -18,5 +19,5 @@ const RoomSchema = new Schema(
   }
 );
 
-const Model = mongoose.model("Room", RoomSchema);
+const Model = mongoose.model<RoomDoc>("Room", RoomSchema);
 export default Model;

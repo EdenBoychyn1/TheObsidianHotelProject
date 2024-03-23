@@ -8,13 +8,18 @@ import logger from "morgan";
 import mongoose from "mongoose";
 
 // Modules to support authentication
-import session from "express-session";
-import passport from "passport";
-import passportLocal from "passport-local";
+import session from "express-session"; // cookie-based session
+import passport from "passport"; // authentication support
+import passportLocal from "passport-local"; // authentication strategy (username/password)
+import flash from "connect-flash"; // authentication messaging
 
 // Authentication Model and Strategy Alias
 let localStrategy = passportLocal.Strategy; // Alias
 
+// User Model
+import User from "../Models/user";
+
+// App Configuration
 import indexRouter from "../Routes/index";
 import usersRouter from "../Routes/users";
 import createHttpError from "http-errors";
@@ -24,7 +29,7 @@ import createHttpError from "http-errors";
 
 const app = express();
 
-// db configuration
+// DB Configuration
 // Find the DB Config file
 import * as DBConfig from "./db";
 
@@ -39,28 +44,44 @@ db.once("open", function () {
   console.log(`Connection to MongoDB at ${DBConfig.HostName}`);
 });
 
-// Use express-session middleware with custom session interface
+//Use express-session middleware with custom session interface
 app.use(
   session({
-    secret: "your-secret-key",
+    secret: DBConfig.SessionSecret,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
 
 console.log(`Directory Name --> ${__dirname}`);
 console.log(`File Name --> ${__filename}`);
+
 // view engine setup
 app.set("views", path.join(__dirname, "../Views"));
 app.set("view engine", "ejs");
 
+// Middleware configuration
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, "../Client")));
+app.use(express.static(path.join(__dirname, "../../Client")));
+app.use(express.static(path.join(__dirname, "../../node_modules")));
 
-app.use(express.static(path.join(__dirname, "../node_modules")));
+app.use(flash());
+
+// Initalize Passport
+// Configure this before the route configuration so the login/logout can be processed
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Implement an Autg Strategy
+passport.use(User.createStrategy());
+
+// Seralize and Deserialize our data
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 
