@@ -3,8 +3,17 @@ import express, { NextFunction } from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
-import session from "express-session";
+
+// Module to connect to MongoDB
 import mongoose from "mongoose";
+
+// Modules to support authentication
+import session from "express-session";
+import passport from "passport";
+import passportLocal from "passport-local";
+
+// Authentication Model and Strategy Alias
+let localStrategy = passportLocal.Strategy; // Alias
 
 import indexRouter from "../Routes/index";
 import usersRouter from "../Routes/users";
