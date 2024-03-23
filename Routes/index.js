@@ -166,19 +166,19 @@ router.post("/reservation-add", async function (req, res, next) {
             const documentsRoomPrice = roomCollection[index].RoomPrice;
             const documentsRoomAccessible = roomCollection[index].RoomAccessible;
             if (documentsReservationStartDate && documentsReservationEndDate) {
-                if (reservationStartDate === documentsReservationStartDate) {
-                    console.log("Same Reservation Start Date as matched reservation Start Date. Therefore cannot book");
+                if ((reservationStartDate <= documentsReservationEndDate &&
+                    reservationEndDate >= documentsReservationStartDate) ||
+                    (documentsReservationStartDate <= reservationEndDate &&
+                        documentsReservationEndDate >= reservationStartDate)) {
+                    console.log("Cannot Make Booking1");
                 }
-                else if (reservationEndDate === documentsReservationEndDate) {
-                    console.log("Same Reservation End Date as matched reservation End Date. Therefore cannot book");
-                }
-                else if (reservationStartDate === documentsReservationStartDate &&
-                    reservationEndDate === documentsReservationEndDate) {
-                    console.log("Same Reservation Start Date & End Date. Therefore cannot book");
-                }
-                else if (reservationStartDate >= documentsReservationStartDate &&
-                    reservationEndDate <= documentsReservationEndDate) {
-                    console.log("Same Reservation Start Date is greater than the matched reservation start date & less than the matched reservation End Date. Therefore cannot book");
+                else if (reservationStartDate === documentsReservationStartDate ||
+                    reservationEndDate === documentsReservationEndDate ||
+                    (reservationStartDate === documentsReservationStartDate &&
+                        reservationEndDate === documentsReservationEndDate) ||
+                    (reservationStartDate >= documentsReservationStartDate &&
+                        reservationEndDate <= documentsReservationEndDate)) {
+                    console.log("Cannot Make Booking2");
                 }
                 else {
                     let newReservation = new reservation_1.default({
@@ -224,7 +224,6 @@ router.post("/reservation-add", async function (req, res, next) {
                         RoomAccessible: documentsRoomAccessible,
                         ReservationID: reservationId,
                     });
-                    console.log(`New Guest: ${newGuest}`);
                     await newGuest.save();
                     await newReservation.save();
                     await newRoomReservation.save();
@@ -232,7 +231,7 @@ router.post("/reservation-add", async function (req, res, next) {
                 }
             }
         }
-        console.log(`ReservationID: ${reservationId}`);
+        res.redirect("/reservation-list");
     }
     catch (error) {
         console.log(error);
