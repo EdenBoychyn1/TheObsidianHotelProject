@@ -1,6 +1,6 @@
 import mongoose, { PassportLocalSchema } from "mongoose";
 const Schema = mongoose.Schema; // strucuture for a class
-import passportLocalMongoose from "passport-local-mongoose";
+// import passportLocalMongoose from "passport-local-mongoose";
 
 const UserSchema = new Schema(
   {
@@ -24,10 +24,7 @@ const UserSchema = new Schema(
   }
 );
 
-UserSchema.plugin(passportLocalMongoose);
+// UserSchema.plugin(passportLocalMongoose);
 
-const Model = mongoose.model(
-  "User",
-  UserSchema as mongoose.PassportLocalSchema
-);
+const Model = mongoose.model("User", UserSchema);
 export default Model;
