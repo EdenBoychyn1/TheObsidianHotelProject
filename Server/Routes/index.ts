@@ -44,11 +44,28 @@ router.get("/login", function (req, res, next) {
 });
 
 /* GET login page */
-router.post("/login", function (req, res, next) {
-  // res.render("index", {
-  //   title: "Login",
-  //   page: "login",
-  // });
+router.post("/login", async function (req, res, next) {
+  try {
+    let username = req.body.userName;
+    let password = req.body.password;
+
+    // Find a single user matching the username and password
+    const user = await Employee.findOne({
+      UserName: username,
+      Password: password,
+    }).exec();
+
+    if (user) {
+      // User found, redirect to about page
+      res.redirect("/about");
+    } else {
+      // User not found or incorrect credentials
+      res.status(401).send("Invalid username or password");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error"); // Handle the error gracefully
+  }
 });
 
 router.get("/about", (req, res) => {

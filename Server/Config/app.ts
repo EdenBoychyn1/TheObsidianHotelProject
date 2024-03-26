@@ -72,15 +72,15 @@ app.use(flash());
 
 // Initalize Passport
 // Configure this before the route configuration so the login/logout can be processed
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-// Implement an Autg Strategy
-passport.use(User.createStrategy());
+// // Implement an Autg Strategy
+// passport.use(User.createStrategy());
 
-// Seralize and Deserialize our data
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+// // Seralize and Deserialize our data
+// passport.serializeUser(User.serializeUser());
+// passport.deserializeUser(User.deserializeUser());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);

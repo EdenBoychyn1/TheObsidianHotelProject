@@ -33,7 +33,25 @@ router.get("/login", function (req, res, next) {
         page: "login",
     });
 });
-router.post("/login", function (req, res, next) {
+router.post("/login", async function (req, res, next) {
+    try {
+        let username = req.body.userName;
+        let password = req.body.password;
+        const user = await user_1.default.findOne({
+            UserName: username,
+            Password: password,
+        }).exec();
+        if (user) {
+            res.redirect("/about");
+        }
+        else {
+            res.status(401).send("Invalid username or password");
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 router.get("/about", (req, res) => {
     res.render("/index", {

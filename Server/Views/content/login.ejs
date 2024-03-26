@@ -3,7 +3,7 @@
     <div class="login mb-2" id="contentArea">
       <h1 class="display-4">Login</h1>
       <div id="messageArea"></div>
-      <form id="loginForm" novalidate>
+      <form method="POST" id="loginForm" novalidate>
         <div class="form-group">
           <div class="input-group mb-2">
             <span class="input-group-addon">
@@ -38,7 +38,7 @@
           </div>
         </div>
         <div class="text-end">
-          <button id="loginButton" type="button" class="btn btn-primary btn-lg">
+          <button id="loginButton" type="submit" class="btn btn-primary btn-lg">
             <i class="fas fa-sign-in-alt"></i>
             Login
           </button>
