@@ -6,10 +6,10 @@ const UserSchema = new Schema(
   {
     FirstName: String,
     LastName: String,
-    UserName: String,
+    username: String,
     SecurityLevel: String,
     EmailAddress: String,
-    Password: String,
+    // password: String,
     DateCreated: {
       type: Date,
       default: Date.now(),
@@ -27,4 +27,14 @@ const UserSchema = new Schema(
 UserSchema.plugin(passportLocalMongoose);
 
 const Model = mongoose.model("User", UserSchema);
+
+declare global {
+  export type UserDocument = mongoose.Document & {
+    FirstName: String;
+    LastName: String;
+    username: String;
+    SecurityLevel: String;
+    EmailAddress: String;
+  };
+}
 export default Model;

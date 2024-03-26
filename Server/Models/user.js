@@ -9,10 +9,9 @@ const passport_local_mongoose_1 = __importDefault(require("passport-local-mongoo
 const UserSchema = new Schema({
     FirstName: String,
     LastName: String,
-    UserName: String,
+    username: String,
     SecurityLevel: String,
     EmailAddress: String,
-    Password: String,
     DateCreated: {
         type: Date,
         default: Date.now(),
