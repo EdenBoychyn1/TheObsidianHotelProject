@@ -9,20 +9,21 @@ const reservation_1 = __importDefault(require("../Models/reservation"));
 const guest_1 = __importDefault(require("../Models/guest"));
 const room_1 = __importDefault(require("../Models/room"));
 const user_1 = __importDefault(require("../Models/user"));
+const passport_1 = __importDefault(require("passport"));
 router.get("/", function (req, res, next) {
-    res.render("index", { title: "Home", page: "home" });
+    res.render("index", { title: "Home", page: "home", displayName: "" });
 });
 router.get("/home", function (req, res, next) {
-    res.render("index", { title: "Home", page: "home" });
+    res.render("index", { title: "Home", page: "home", displayName: "" });
 });
 router.get("/about", function (req, res, next) {
-    res.render("index", { title: "About Us", page: "about" });
+    res.render("index", { title: "About Us", page: "about", displayName: "" });
 });
 router.get("/gallery", function (req, res, next) {
-    res.render("index", { title: "Gallery", page: "gallery" });
+    res.render("index", { title: "Gallery", page: "gallery", displayName: "" });
 });
 router.get("/rooms", function (req, res, next) {
-    res.render("index", { title: "Room", page: "rooms" });
+    res.render("index", { title: "Room", page: "rooms", displayName: "" });
 });
 router.get("/login", function (req, res, next) {
     let username = req.body.userName;
@@ -31,49 +32,91 @@ router.get("/login", function (req, res, next) {
     res.render("index", {
         title: "Login",
         page: "login",
+        displayName: "",
+        messages: "",
+    });
+});
+router.get("/logout", function (req, res, next) {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        res.redirect("/login");
     });
 });
 router.post("/login", function (req, res, next) {
+    passport_1.default.authenticate("local", function (err, user, info) {
+        if (err) {
+            console.error(err);
+            res.end(err);
+        }
+        if (!user) {
+            req.flash("loginMessage", "Authentication Error");
+            return res.redirect("/login");
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                console.error(err);
+                res.end(err);
+            }
+            return res.redirect("/reservation-list");
+        });
+    })(req, res, next);
 });
 router.get("/about", (req, res) => {
     res.render("/index", {
         title: "About Us",
         page: "about",
+        displayName: "",
     });
 });
 router.get("/reservation", function (req, res, next) {
-    res.render("index", { title: "Reservations", page: "reservation" });
+    res.render("index", {
+        title: "Reservations",
+        page: "reservation",
+        displayName: "",
+    });
 });
 router.get("/employee-register", function (req, res, next) {
     console.log("Hello");
     res.render("index", {
         title: "Employee Registration ",
         page: "employee-register",
+        displayName: "",
+        messages: "",
     });
 });
-router.post("/employee-register", async (req, res, next) => {
-    try {
-        let newEmployee = new user_1.default({
-            FirstName: req.body.firstName,
-            LastName: req.body.lastName,
-            UserName: req.body.emailAddress,
-            SecurityLevel: "FrontDeskAgent",
-            EmailAddress: req.body.emailAddress,
-            Password: req.body.password,
+router.post("/employee-register", function (req, res, next) {
+    let newEmployee = new user_1.default({
+        FirstName: req.body.firstName,
+        LastName: req.body.lastName,
+        username: req.body.emailAddress,
+        SecurityLevel: "FrontDeskAgent",
+        EmailAddress: req.body.emailAddress,
+    });
+    user_1.default.register(newEmployee, req.body.password, function (err) {
+        if (err) {
+            if (err.name == "UserExistsError") {
+                console.error("ERROR: User already exists!");
+                req.flash("registerMessage", "Registration Error");
+            }
+            else {
+                console.error(err.name);
+                req.flash("registerMessage", "Server Error");
+            }
+            return res.redirect("/employee-register");
+        }
+        return passport_1.default.authenticate('local')(req, res, function () {
+            console.log("in auth function");
+            return res.redirect('/reservation-list');
         });
-        console.log(newEmployee);
-        await newEmployee.save();
-        res.redirect("./login");
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
-    }
+    });
 });
 router.get("/register", function (req, res, next) {
     res.render("index", {
         title: "Guest Registration ",
         page: "register",
+        displayName: "",
     });
 });
 router.post("/register", async (req, res, next) => {

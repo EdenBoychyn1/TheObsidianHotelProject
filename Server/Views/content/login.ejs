@@ -2,8 +2,12 @@
   <div class="offset-md-3 col-md-6 col-sm-12">
     <div class="login mb-2" id="contentArea">
       <h1 class="display-4">Login</h1>
-      <div id="messageArea"></div>
-      <form id="loginForm" novalidate>
+
+      <% if (messages.length > 0) { %>
+      <div id="messageArea" class="alert alert-danger"><%= messages %></div>
+      <% } %>
+
+      <form method="POST" id="loginForm" novalidate>
         <div class="form-group">
           <div class="input-group mb-2">
             <span class="input-group-addon">
@@ -13,7 +17,7 @@
               type="text"
               class="form-control"
               id="userName"
-              name="userName"
+              name="username"
               required
               value=""
               placeholder="Enter your username"
@@ -38,9 +42,17 @@
           </div>
         </div>
         <div class="text-end">
-          <button id="loginButton" type="button" class="btn btn-primary btn-lg">
+          <button id="loginButton" type="submit" class="btn btn-primary btn-lg">
             <i class="fas fa-sign-in-alt"></i>
             Login
+          </button>
+          <button
+            id="cancelButton"
+            type="cancel"
+            class="btn btn-primary btn-lg"
+          >
+            <i class="fas fa-sign-in-alt"></i>
+            Cancel
           </button>
         </div>
       </form>
