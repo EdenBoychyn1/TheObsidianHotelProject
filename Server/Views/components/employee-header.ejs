@@ -33,9 +33,17 @@
       <li class="nav-item">
         <a class="nav-link" href="/about">About Us</a>
       </li>
+
+      <% if(displayName) {%>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">Logout</a>
+      </li>
+      <% } else { %>
       <li class="nav-item">
         <a class="nav-link" href="/login">Login</a>
       </li>
+      <% } %>
+
       <li class="nav-item">
         <a class="nav-link" href="/employee-register">Employee Register</a>
       </li>
