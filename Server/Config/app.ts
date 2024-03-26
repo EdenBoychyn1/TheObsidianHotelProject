@@ -1,4 +1,4 @@
-import createErrorfrom, { HttpError } from "http-errors";
+import createHttpError from "http-errors";
 import express, { NextFunction } from "express";
 import path from "path";
 import cookieParser from "cookie-parser";
@@ -22,7 +22,6 @@ import User from "../Models/user";
 // App Configuration
 import indexRouter from "../Routes/index";
 import usersRouter from "../Routes/users";
-import createHttpError from "http-errors";
 
 // Configure session middleware
 // Define a custom interface extending express-session's Session interface
@@ -72,15 +71,15 @@ app.use(flash());
 
 // Initalize Passport
 // Configure this before the route configuration so the login/logout can be processed
-// app.use(passport.initialize());
-// app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 
-// // Implement an Autg Strategy
-// passport.use(User.createStrategy());
+// // Implement an Auth Strategy
+passport.use(User.createStrategy());
 
 // // Seralize and Deserialize our data
-// passport.serializeUser(User.serializeUser());
-// passport.deserializeUser(User.deserializeUser());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
