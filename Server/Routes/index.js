@@ -96,16 +96,19 @@ router.post("/employee-register", function (req, res, next) {
     });
     user_1.default.register(newEmployee, req.body.password, function (err) {
         if (err) {
-            if (err.name == "UserExists") {
+            if (err.name == "UserExistsError") {
                 console.error("ERROR: User already exists!");
                 req.flash("registerMessage", "Registration Error");
             }
-            console.error(err.name);
-            req.flash("registerMessage", "Server Error");
-            return res.redirect("/register");
+            else {
+                console.error(err.name);
+                req.flash("registerMessage", "Server Error");
+            }
+            return res.redirect("/employee-register");
         }
-        return passport_1.default.authenticate("local")(req, res, function () {
-            return res.redirect("/reservation-list");
+        return passport_1.default.authenticate('local')(req, res, function () {
+            console.log("in auth function");
+            return res.redirect('/reservation-list');
         });
     });
 });

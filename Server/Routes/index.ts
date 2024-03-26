@@ -156,7 +156,8 @@ router.get("/employee-register", function (req, res, next) {
 //   }
 // });
 
-router.post("/employee-register", function (req, res, next) {
+router.post("/employee-register", function (req: express.Request, res: express.Response, next: express.NextFunction) 
+{
   // Instantiate a new user object
   // We have to do this because we do not have access to the user model
   let newEmployee = new Employee({
@@ -168,20 +169,27 @@ router.post("/employee-register", function (req, res, next) {
     EmailAddress: req.body.emailAddress,
   });
 
-  Employee.register(newEmployee, req.body.password, function (err: any) {
+  Employee.register(newEmployee, req.body.password, function (err: any) 
+  {
     if (err) {
-      if (err.name == "UserExists") {
+      if (err.name == "UserExistsError") {
         console.error("ERROR: User already exists!");
         req.flash("registerMessage", "Registration Error");
       }
-      console.error(err.name); // Other error
-      req.flash("registerMessage", "Server Error");
-      return res.redirect("/register");
+      else
+      {
+        console.error(err.name); // Other error
+        req.flash("registerMessage", "Server Error");
+      }
+      
+      return res.redirect("/employee-register");
     }
 
-    // Automatically login the user so that they don't have to do it themselves
-    return passport.authenticate("local")(req, res, function () {
-      return res.redirect("/reservation-list");
+    return passport.authenticate('local')(req, res, function()
+    {
+      console.log("in auth function")
+
+        return res.redirect('/reservation-list');
     });
   });
 });
