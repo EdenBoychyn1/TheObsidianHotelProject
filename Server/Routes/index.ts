@@ -55,31 +55,6 @@ router.get("/logout", function (req, res, next) {
   });
 });
 
-/* GET login page */
-// router.post("/login", async function (req, res, next) {
-//   try {
-//     let username = req.body.userName;
-//     let password = req.body.password;
-
-//     // Find a single user matching the username and password
-//     const user = await Employee.findOne({
-//       UserName: username,
-//       Password: password,
-//     }).exec();
-
-//     if (user) {
-//       // User found, redirect to about page
-//       res.redirect("/about");
-//     } else {
-//       // User not found or incorrect credentials
-//       res.status(401).send("Invalid username or password");
-//     }
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Internal Server Error"); // Handle the error gracefully
-//   }
-// });
-
 router.post("/login", function (req, res, next) {
   passport.authenticate("local", function (err: any, user: any, info: any) {
     if (err) {
@@ -133,66 +108,41 @@ router.get("/employee-register", function (req, res, next) {
   });
 });
 
-// router.post("/employee-register", async (req, res, next) => {
-//   try {
-//     // let hashedPassword = window.btoa(req.body.password);
-
-//     let newEmployee = new Employee({
-//       FirstName: req.body.firstName,
-//       LastName: req.body.lastName,
-//       UserName: req.body.emailAddress,
-//       SecurityLevel: "FrontDeskAgent",
-//       EmailAddress: req.body.emailAddress,
-//       Password: req.body.password,
-//     });
-
-//     console.log(newEmployee);
-//     await newEmployee.save();
-
-//     res.redirect("./login");
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Internal Server Error");
-//   }
-// });
-
-router.post("/employee-register", function (req: express.Request, res: express.Response, next: express.NextFunction) 
-{
-  // Instantiate a new user object
-  // We have to do this because we do not have access to the user model
-  let newEmployee = new Employee({
-    // Why lowercase username and why is everything else uppercase;
-    FirstName: req.body.firstName,
-    LastName: req.body.lastName,
-    username: req.body.emailAddress,
-    SecurityLevel: "FrontDeskAgent",
-    EmailAddress: req.body.emailAddress,
-  });
-
-  Employee.register(newEmployee, req.body.password, function (err: any) 
-  {
-    if (err) {
-      if (err.name == "UserExistsError") {
-        console.error("ERROR: User already exists!");
-        req.flash("registerMessage", "Registration Error");
-      }
-      else
-      {
-        console.error(err.name); // Other error
-        req.flash("registerMessage", "Server Error");
-      }
-      
-      return res.redirect("/employee-register");
-    }
-
-    return passport.authenticate('local')(req, res, function()
-    {
-      console.log("in auth function")
-
-        return res.redirect('/reservation-list');
+router.post(
+  "/employee-register",
+  function (
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) {
+    // Instantiate a new user object
+    // We have to do this because we do not have access to the user model
+    let newEmployee = new Employee({
+      // Why lowercase username and why is everything else uppercase;
+      FirstName: req.body.firstName,
+      LastName: req.body.lastName,
+      username: req.body.emailAddress,
+      SecurityLevel: "FrontDeskAgent",
+      EmailAddress: req.body.emailAddress,
     });
-  });
-});
+
+    Employee.register(newEmployee, req.body.password, function (err: any) {
+      if (err) {
+        if (err.name == "UserExistsError") {
+          console.error("ERROR: User already exists!");
+          req.flash("registerMessage", "Registration Error");
+        } else {
+          console.error(err.name); // Other error
+          req.flash("registerMessage", "Server Error");
+        }
+
+        return res.redirect("/employee-register");
+      }
+
+      res.redirect("/login");
+    });
+  }
+);
 
 /* GET Guest Register page */
 router.get("/register", function (req, res, next) {
@@ -216,12 +166,12 @@ router.post("/register", async (req, res, next) => {
     }
 
     let newGuest = new Guest({
+      // Why lowercase username and why is everything else uppercase;
       FirstName: req.body.firstName,
       LastName: req.body.lastName,
-      UserName: req.body.emailAddress,
-      SecurityLevel: "Guest",
+      username: req.body.emailAddress,
+      SecurityLevel: "FrontDeskAgent",
       EmailAddress: req.body.emailAddress,
-      Password: req.body.password,
       UnitNumber: req.body.inputUnitNumber,
       StreetNumber: streetNumber,
       StreetName: streetName,
@@ -231,10 +181,21 @@ router.post("/register", async (req, res, next) => {
       PostalCode: req.body.inputPostalCode,
     });
 
-    console.log(newGuest);
-    await newGuest.save();
+    Guest.register(newGuest, req.body.password, function (err: any) {
+      if (err) {
+        if (err.name == "UserExistsError") {
+          console.error("ERROR: User already exists!");
+          req.flash("registerMessage", "Registration Error");
+        } else {
+          console.error(err.name); // Other error
+          req.flash("registerMessage", "Server Error");
+        }
 
-    res.redirect("./login");
+        return res.redirect("/register");
+      }
+
+      res.redirect("/login");
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send("Internal Server Error");

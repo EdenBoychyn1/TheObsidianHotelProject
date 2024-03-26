@@ -106,10 +106,7 @@ router.post("/employee-register", function (req, res, next) {
             }
             return res.redirect("/employee-register");
         }
-        return passport_1.default.authenticate('local')(req, res, function () {
-            console.log("in auth function");
-            return res.redirect('/reservation-list');
-        });
+        res.redirect("/login");
     });
 });
 router.get("/register", function (req, res, next) {
@@ -132,10 +129,9 @@ router.post("/register", async (req, res, next) => {
         let newGuest = new guest_1.default({
             FirstName: req.body.firstName,
             LastName: req.body.lastName,
-            UserName: req.body.emailAddress,
-            SecurityLevel: "Guest",
+            username: req.body.emailAddress,
+            SecurityLevel: "FrontDeskAgent",
             EmailAddress: req.body.emailAddress,
-            Password: req.body.password,
             UnitNumber: req.body.inputUnitNumber,
             StreetNumber: streetNumber,
             StreetName: streetName,
@@ -144,9 +140,20 @@ router.post("/register", async (req, res, next) => {
             Country: req.body.inputCountry,
             PostalCode: req.body.inputPostalCode,
         });
-        console.log(newGuest);
-        await newGuest.save();
-        res.redirect("./login");
+        guest_1.default.register(newGuest, req.body.password, function (err) {
+            if (err) {
+                if (err.name == "UserExistsError") {
+                    console.error("ERROR: User already exists!");
+                    req.flash("registerMessage", "Registration Error");
+                }
+                else {
+                    console.error(err.name);
+                    req.flash("registerMessage", "Server Error");
+                }
+                return res.redirect("/register");
+            }
+            res.redirect("/login");
+        });
     }
     catch (error) {
         console.error(error);
