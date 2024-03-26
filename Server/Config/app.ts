@@ -78,7 +78,7 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 
 // // Seralize and Deserialize our data
-passport.serializeUser(User.serializeUser());
+passport.serializeUser(User.serializeUser() as any);
 passport.deserializeUser(User.deserializeUser());
 
 app.use("/", indexRouter);
