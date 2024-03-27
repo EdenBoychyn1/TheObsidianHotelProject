@@ -631,7 +631,7 @@
 
     Copyright();
 
-    CheckLogin();
+    // CheckLogin();
 
     let page_id = document.getElementsByTagName("body")[0].getAttribute("id");
 

@@ -5,13 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
+const passport_local_mongoose_1 = __importDefault(require("passport-local-mongoose"));
 const GuestSchema = new Schema({
     FirstName: String,
     LastName: String,
-    UserName: String,
+    username: String,
     SecurityLevel: String,
     EmailAddress: String,
-    Password: String,
+    ConfirmPassword: String,
     UnitNumber: String,
     StreetNumber: String,
     StreetName: String,
@@ -19,11 +20,18 @@ const GuestSchema = new Schema({
     Province: String,
     Country: String,
     PostalCode: String,
-    DateCreated: Number,
-    LastUpdate: Number,
+    DateCreated: {
+        type: Date,
+        default: Date.now(),
+    },
+    LastUpdate: {
+        type: Date,
+        default: Date.now(),
+    },
 }, {
     collection: "guests",
 });
+GuestSchema.plugin(passport_local_mongoose_1.default);
 const Model = mongoose_1.default.model("Guest", GuestSchema);
 exports.default = Model;
 //# sourceMappingURL=guest.js.map

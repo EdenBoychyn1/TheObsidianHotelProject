@@ -11,6 +11,7 @@ import mongoose from "mongoose";
 import session from "express-session"; // cookie-based session
 import passport from "passport"; // authentication support
 import passportLocal from "passport-local"; // authentication strategy (username/password)
+import { Strategy as LocalStrategy } from "passport-local";
 import flash from "connect-flash"; // authentication messaging
 
 // Authentication Model and Strategy Alias
@@ -18,6 +19,7 @@ let localStrategy = passportLocal.Strategy; // Alias
 
 // User Model
 import User from "../Models/user";
+import Guest from "../Models/guest";
 
 // App Configuration
 import indexRouter from "../Routes/index";
@@ -78,7 +80,7 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 
 // // Seralize and Deserialize our data
-passport.serializeUser(User.serializeUser() as any);
+passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use("/", indexRouter);

@@ -26,15 +26,39 @@ router.get("/rooms", function (req, res, next) {
     res.render("index", { title: "Room", page: "rooms", displayName: "" });
 });
 router.get("/login", function (req, res, next) {
-    let username = req.body.userName;
-    let password = req.body.password;
-    console.log(username, password);
     res.render("index", {
         title: "Login",
         page: "login",
         displayName: "",
         messages: "",
     });
+});
+router.get("/guest-login", function (req, res, next) {
+    res.render("index", {
+        title: "Login",
+        page: "login",
+        displayName: "",
+        messages: "",
+    });
+});
+router.post("/guest-login", async (req, res, next) => {
+    let Username = req.body.username;
+    let Password = req.body.password;
+    try {
+        const loggedInGuest = await guest_1.default.findOne({
+            $and: [{ EmailAddress: Username }, { ConfirmPassword: Password }],
+        }).exec();
+        if (loggedInGuest) {
+            res.redirect("/");
+        }
+        else {
+            res.redirect("/guest-login");
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 router.get("/logout", function (req, res, next) {
     req.logout(function (err) {
@@ -45,12 +69,16 @@ router.get("/logout", function (req, res, next) {
     });
 });
 router.post("/login", function (req, res, next) {
+    console.log("Hello");
     passport_1.default.authenticate("local", function (err, user, info) {
         if (err) {
+            console.log("Hello1");
             console.error(err);
             res.end(err);
         }
         if (!user) {
+            console.log("Hello3");
+            console.log(`user ${user}`);
             req.flash("loginMessage", "Authentication Error");
             return res.redirect("/login");
         }
@@ -59,7 +87,12 @@ router.post("/login", function (req, res, next) {
                 console.error(err);
                 res.end(err);
             }
-            return res.redirect("/reservation-list");
+            if (user.SecurityLevel === "Guest") {
+                res.redirect("/");
+            }
+            else {
+                res.redirect("/reservation-list");
+            }
         });
     })(req, res, next);
 });
@@ -106,10 +139,7 @@ router.post("/employee-register", function (req, res, next) {
             }
             return res.redirect("/employee-register");
         }
-        return passport_1.default.authenticate('local')(req, res, function () {
-            console.log("in auth function");
-            return res.redirect('/reservation-list');
-        });
+        return res.redirect("/reservation-list");
     });
 });
 router.get("/register", function (req, res, next) {
@@ -120,9 +150,8 @@ router.get("/register", function (req, res, next) {
     });
 });
 router.post("/register", async (req, res, next) => {
-    try {
+    {
         let address = req.body.inputAddress;
-        console.log(address);
         let addressSplit = address.split(" ");
         let streetNumber = addressSplit[0];
         let streetName = addressSplit[1];
@@ -132,10 +161,10 @@ router.post("/register", async (req, res, next) => {
         let newGuest = new guest_1.default({
             FirstName: req.body.firstName,
             LastName: req.body.lastName,
-            UserName: req.body.emailAddress,
+            username: req.body.emailAddress,
             SecurityLevel: "Guest",
+            ConfirmPassword: req.body.confirmPassword,
             EmailAddress: req.body.emailAddress,
-            Password: req.body.password,
             UnitNumber: req.body.inputUnitNumber,
             StreetNumber: streetNumber,
             StreetName: streetName,
@@ -144,13 +173,20 @@ router.post("/register", async (req, res, next) => {
             Country: req.body.inputCountry,
             PostalCode: req.body.inputPostalCode,
         });
-        console.log(newGuest);
-        await newGuest.save();
-        res.redirect("./login");
-    }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
+        guest_1.default.register(newGuest, req.body.password, function (err) {
+            if (err) {
+                if (err.name == "UserExistsError") {
+                    console.error("ERROR: User already exists!");
+                    req.flash("registerMessage", "Registration Error");
+                }
+                else {
+                    console.error(err.name);
+                    req.flash("registerMessage", "Server Error");
+                }
+                return res.redirect("/employee-register");
+            }
+            return res.redirect("/");
+        });
     }
 });
 router.get("/reservation-list", async (req, res, next) => {
