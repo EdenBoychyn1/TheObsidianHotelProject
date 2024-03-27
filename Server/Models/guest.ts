@@ -1,5 +1,6 @@
 import mongoose, { PassportLocalSchema } from "mongoose";
 const Schema = mongoose.Schema; // strucuture for a class
+
 import passportLocalMongoose from "passport-local-mongoose";
 
 const GuestSchema = new Schema(

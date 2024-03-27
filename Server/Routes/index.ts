@@ -202,6 +202,7 @@ router.post("/register", async (req, res, next) => {
     // We have to do this because we do not have access to the user model
     let newGuest = new Guest({
       // Why lowercase username and why is everything else uppercase;
+      // Why lowercase username and why is everything else uppercase;
       FirstName: req.body.firstName,
       LastName: req.body.lastName,
       username: req.body.emailAddress,
