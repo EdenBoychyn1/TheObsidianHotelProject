@@ -348,10 +348,11 @@ h3 {
 }
 
 .room-icon {
-  stroke: #087f5b;
   width: 24px;
   height: 24px;
   fill: #087f5b;
+  color: #087f5b;
+  stroke: #087f5b;
 }
 
 .room-price {
@@ -364,12 +365,14 @@ h3 {
 .room-title {
   font: arial;
   font-weight: 600;
+  color: #087f5b;
 }
 
 .amenity-title {
   margin: 1rem;
   font: arial;
   font-weight: 400;
+  color: #087f5b;
   transform: translate(-17%, 0%);
 }
 
