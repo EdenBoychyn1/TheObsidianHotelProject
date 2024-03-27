@@ -183,7 +183,7 @@ router.post("/register", async (req, res, next) => {
                     console.error(err.name);
                     req.flash("registerMessage", "Server Error");
                 }
-                return res.redirect("/employee-register");
+                return res.redirect("/register");
             }
             return res.redirect("/");
         });

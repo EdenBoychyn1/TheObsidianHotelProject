@@ -10,6 +10,8 @@ import passport from "passport";
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
+  // let securityLevel = req.user ? req.user.SecurityLevel : "Guest"; // Assuming you're using Passport and the user is stored in req.user
+  // let headerTemplate = securityLevel === "Employee" ? "employee-header" : "header";
   res.render("index", { title: "Home", page: "home", displayName: "" });
 });
 
@@ -228,7 +230,7 @@ router.post("/register", async (req, res, next) => {
           req.flash("registerMessage", "Server Error");
         }
 
-        return res.redirect("/employee-register");
+        return res.redirect("/register");
       }
 
       return res.redirect("/");
