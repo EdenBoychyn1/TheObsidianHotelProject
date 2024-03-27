@@ -78,7 +78,7 @@ body {
   padding-right: 1.5rem;
 }
 
-.container {
+.container-gallery {
   width: auto;
   height: auto;
   transform: translate(-20%, 0%);
@@ -103,7 +103,7 @@ body {
 /*********************************/
 .section-hero {
   background-color: #fde6ee;
-  width: 143%;
+  width: 116rem;
   /* padding: 1rem 0; */
 }
 
@@ -405,4 +405,40 @@ h3 {
 .btn--small {
   font-size: 14px;
   padding: 8px 12px;
+}
+
+/*********************************/
+/***************Gallery***********/
+/*********************************/
+
+.container-hero-gallery {
+  width: auto;
+  height: auto;
+  transform: translate(-20%, 0%);
+}
+.section-hero-gallery {
+  background-color: #fde6ee;
+  width: 100rem;
+  margin: auto;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.6rem;
+  padding-right: 1.6rem;
+}
+
+.gallery-item {
+  overflow: hidden;
+}
+/*How to get rid of whitespace between images*/
+.gallery-item img {
+  display: block;
+  width: 100%;
+  transition: all 0.4s;
+}
+
+.gallery-item img:hover {
+  transform: scale(1.1);
 }
