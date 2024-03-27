@@ -422,11 +422,15 @@ h3 {
   margin: auto;
 }
 
+.icon-design {
+  margin: 1.6rem 2.4rem;
+}
+
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.6rem;
-  padding-right: 1.6rem;
+  padding: 0 0 1.6rem 2.4rem;
 }
 
 .gallery-item {
