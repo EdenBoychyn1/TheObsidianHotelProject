@@ -234,83 +234,49 @@ router.post("/reservation-add", async function (req, res, next) {
         for (let i = 2; i < addressSplit.length; i++) {
             streetName += " " + addressSplit[i];
         }
-        const roomCollection = await room_1.default.find({ RoomType: roomType }).exec();
-        console.log(`Country ${country}`);
+        const roomCollection = await room_1.default.find({
+            RoomType: roomType,
+        }).exec();
+        let conflictFound = false;
         for (let index = 0; index < roomCollection.length; index++) {
-            console.log(`Index: ${index + 1}, \n ${roomCollection[index]}`);
-            const documentsReservationStartDate = roomCollection[index].ReservationStartDate;
-            const documentsReservationEndDate = roomCollection[index].ReservationEndDate;
-            const documentsRoomNumber = roomCollection[index].RoomNumber;
-            const documentsRoomDescription = roomCollection[index].RoomDescription;
-            const documentsRoomPrice = roomCollection[index].RoomPrice;
-            const documentsRoomAccessible = roomCollection[index].RoomAccessible;
-            if (documentsReservationStartDate && documentsReservationEndDate) {
-                if ((reservationStartDate <= documentsReservationEndDate &&
-                    reservationEndDate >= documentsReservationStartDate) ||
-                    (documentsReservationStartDate <= reservationEndDate &&
-                        documentsReservationEndDate >= reservationStartDate)) {
-                    console.log("Cannot Make Booking1");
-                }
-                else if (reservationStartDate === documentsReservationStartDate ||
-                    reservationEndDate === documentsReservationEndDate ||
-                    (reservationStartDate === documentsReservationStartDate &&
-                        reservationEndDate === documentsReservationEndDate) ||
-                    (reservationStartDate >= documentsReservationStartDate &&
-                        reservationEndDate <= documentsReservationEndDate)) {
-                    console.log("Cannot Make Booking2");
-                }
-                else {
-                    let newReservation = new reservation_1.default({
-                        ReservationID: reservationId,
-                        ReservationStartDate: reservationStartDate,
-                        ReservationEndDate: reservationEndDate,
-                        NumberOfGuests: numberOfGuests,
-                        RoomNumber: documentsRoomNumber,
-                        BillingUnitNumber: unitNumber,
-                        BillingStreetNumber: streetNumber,
-                        BillingStreetName: streetName,
-                        BillingCity: city,
-                        BillingProvince: province,
-                        BillingCountry: country,
-                        BillingPostalCode: postalCode,
-                        EmailAddress: emailAddress,
-                    });
-                    let newGuest = new guest_1.default({
-                        FirstName: firstName,
-                        LastName: lastName,
-                        UserName: "",
-                        SecurityLevel: "Guest",
-                        EmailAddress: emailAddress,
-                        Password: "",
-                        UnitNumber: unitNumber,
-                        StreetNumber: streetNumber,
-                        StreetName: streetName,
-                        City: city,
-                        Province: province,
-                        Country: country,
-                        PostalCode: postalCode,
-                        DateCreated: Date.now(),
-                        LastUpdate: Date.now(),
-                    });
-                    let newRoomReservation = new room_1.default({
-                        RoomNumber: documentsRoomNumber,
-                        ReservationStartDate: reservationStartDate,
-                        ReservationEndDate: reservationEndDate,
-                        RoomDescription: documentsRoomDescription,
-                        RoomType: roomType,
-                        RoomPrice: documentsRoomPrice,
-                        RoomStatus: "Reserved",
-                        RoomAccessible: documentsRoomAccessible,
-                        ReservationID: reservationId,
-                    });
-                    await newGuest.save();
-                    await newReservation.save();
-                    await newRoomReservation.save();
+            const reservation = await reservation_1.default.find({
+                RoomNumber: roomCollection[index].RoomNumber,
+            });
+            for (let j = 0; j < reservation.length; j++) {
+                const documentsReservationStartDate = reservation[j].ReservationStartDate;
+                const documentsReservationEndDate = reservation[j].ReservationEndDate;
+                console.log(`Proposed Reservation Start Date: ${reservationStartDate}, Reservation Start Date of already Created Reservation ${documentsReservationStartDate}`);
+                if (reservationStartDate === documentsReservationStartDate) {
+                    console.log("Reservation conflicts with an existing reservation");
+                    conflictFound = true;
                     break;
                 }
             }
+            if (conflictFound) {
+                console.log(`Conflict Found ${conflictFound}`);
+                break;
+            }
         }
-        res.redirect("/reservation-list");
+        if (!conflictFound) {
+            let newReservation = new reservation_1.default({
+                ReservationID: reservationId,
+                ReservationStartDate: reservationStartDate,
+                ReservationEndDate: reservationEndDate,
+                NumberOfGuests: numberOfGuests,
+                RoomNumber: "",
+                RoomType: roomType,
+                BillingUnitNumber: unitNumber,
+                BillingStreetNumber: streetNumber,
+                BillingStreetName: streetName,
+                BillingCity: city,
+                BillingProvince: province,
+                BillingCountry: country,
+                BillingPostalCode: postalCode,
+                EmailAddress: emailAddress,
+            });
+            await newReservation.save();
+            res.redirect("/reservation-list");
+        }
     }
     catch (error) {
         console.log(error);

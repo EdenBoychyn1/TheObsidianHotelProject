@@ -6,6 +6,8 @@ export interface ReservationDoc extends mongoose.Document {
   ReservationEndDate: String;
   NumberOfGuests: Number;
   RoomNumber: Number;
+  RoomType: String;
+  RoomStatus: String;
   BillingUnitNumber: String;
   BillingStreetNumber: String;
   BillingStreetName: String;
