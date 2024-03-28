@@ -239,44 +239,48 @@ router.post("/reservation-add", async function (req, res, next) {
         }).exec();
         let conflictFound = false;
         for (let index = 0; index < roomCollection.length; index++) {
+            console.log(`Room Number: ${roomCollection[index].RoomNumber}`);
             const reservation = await reservation_1.default.find({
                 RoomNumber: roomCollection[index].RoomNumber,
             });
+            console.log(`Room Collection Length ${roomCollection.length}`);
             for (let j = 0; j < reservation.length; j++) {
                 const documentsReservationStartDate = reservation[j].ReservationStartDate;
                 const documentsReservationEndDate = reservation[j].ReservationEndDate;
                 console.log(`Proposed Reservation Start Date: ${reservationStartDate}, Reservation Start Date of already Created Reservation ${documentsReservationStartDate}`);
-                if (reservationStartDate === documentsReservationStartDate) {
+                console.log(`Reservation Length ${reservation.length}`);
+                console.log(`Reservation: ${reservation[index]}`);
+                if (reservationStartDate === documentsReservationStartDate ||
+                    reservationEndDate === documentsReservationEndDate) {
                     console.log("Reservation conflicts with an existing reservation");
                     conflictFound = true;
-                    break;
                 }
             }
             if (conflictFound) {
                 console.log(`Conflict Found ${conflictFound}`);
                 break;
             }
+            else if (!conflictFound) {
+                let newReservation = new reservation_1.default({
+                    ReservationID: reservationId,
+                    ReservationStartDate: reservationStartDate,
+                    ReservationEndDate: reservationEndDate,
+                    NumberOfGuests: numberOfGuests,
+                    RoomNumber: roomCollection[index].RoomNumber,
+                    RoomType: roomType,
+                    BillingUnitNumber: unitNumber,
+                    BillingStreetNumber: streetNumber,
+                    BillingStreetName: streetName,
+                    BillingCity: city,
+                    BillingProvince: province,
+                    BillingCountry: country,
+                    BillingPostalCode: postalCode,
+                    EmailAddress: emailAddress,
+                });
+                await newReservation.save();
+            }
         }
-        if (!conflictFound) {
-            let newReservation = new reservation_1.default({
-                ReservationID: reservationId,
-                ReservationStartDate: reservationStartDate,
-                ReservationEndDate: reservationEndDate,
-                NumberOfGuests: numberOfGuests,
-                RoomNumber: "",
-                RoomType: roomType,
-                BillingUnitNumber: unitNumber,
-                BillingStreetNumber: streetNumber,
-                BillingStreetName: streetName,
-                BillingCity: city,
-                BillingProvince: province,
-                BillingCountry: country,
-                BillingPostalCode: postalCode,
-                EmailAddress: emailAddress,
-            });
-            await newReservation.save();
-            res.redirect("/reservation-list");
-        }
+        res.redirect("/reservation-list");
     }
     catch (error) {
         console.log(error);

@@ -425,9 +425,13 @@ router.post("/reservation-add", async function (req, res, next) {
      *  Looping through rooms array
      */
     for (let index = 0; index < roomCollection.length; index++) {
+      console.log(`Room Number: ${roomCollection[index].RoomNumber}`);
+
       const reservation = await Reservation.find({
         RoomNumber: roomCollection[index].RoomNumber,
       });
+
+      console.log(`Room Collection Length ${roomCollection.length}`);
 
       for (let j = 0; j < reservation.length; j++) {
         const documentsReservationStartDate =
@@ -438,42 +442,45 @@ router.post("/reservation-add", async function (req, res, next) {
           `Proposed Reservation Start Date: ${reservationStartDate}, Reservation Start Date of already Created Reservation ${documentsReservationStartDate}`
         );
 
-        if (reservationStartDate === documentsReservationStartDate) {
+        console.log(`Reservation Length ${reservation.length}`);
+        console.log(`Reservation: ${reservation[index]}`);
+        if (
+          reservationStartDate === documentsReservationStartDate ||
+          reservationEndDate === documentsReservationEndDate
+        ) {
           console.log("Reservation conflicts with an existing reservation");
           conflictFound = true;
-          break; // Exit the inner loop since conflict is found
         }
       }
 
       if (conflictFound) {
         console.log(`Conflict Found ${conflictFound}`);
         break;
+      } else if (!conflictFound) {
+        // If no conflict is found, proceed with creating the new reservation
+        let newReservation = new Reservation({
+          ReservationID: reservationId,
+          ReservationStartDate: reservationStartDate,
+          ReservationEndDate: reservationEndDate,
+          NumberOfGuests: numberOfGuests,
+          RoomNumber: roomCollection[index].RoomNumber,
+          RoomType: roomType,
+          BillingUnitNumber: unitNumber,
+          BillingStreetNumber: streetNumber,
+          BillingStreetName: streetName,
+          BillingCity: city,
+          BillingProvince: province,
+          BillingCountry: country,
+          BillingPostalCode: postalCode,
+          EmailAddress: emailAddress,
+        });
+
+        // Save the new reservation
+        await newReservation.save();
       }
     }
 
-    if (!conflictFound) {
-      // If no conflict is found, proceed with creating the new reservation
-      let newReservation = new Reservation({
-        ReservationID: reservationId,
-        ReservationStartDate: reservationStartDate,
-        ReservationEndDate: reservationEndDate,
-        NumberOfGuests: numberOfGuests,
-        RoomNumber: "",
-        RoomType: roomType,
-        BillingUnitNumber: unitNumber,
-        BillingStreetNumber: streetNumber,
-        BillingStreetName: streetName,
-        BillingCity: city,
-        BillingProvince: province,
-        BillingCountry: country,
-        BillingPostalCode: postalCode,
-        EmailAddress: emailAddress,
-      });
-
-      // Save the new reservation
-      await newReservation.save();
-      res.redirect("/reservation-list");
-    }
+    res.redirect("/reservation-list");
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
