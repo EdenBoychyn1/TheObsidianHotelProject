@@ -2,9 +2,9 @@ import express from "express";
 const router = express.Router();
 
 import Reservation from "../Models/reservation";
-import Guest from "../Models/guest";
+// import Guest from "../Models/guest";
 import Room from "../Models/room";
-import Employee from "../Models/user";
+import { User, Guest } from "../Models/user";
 import mongoose from "mongoose";
 import passport from "passport";
 
@@ -17,11 +17,6 @@ router.get("/", function (req, res, next) {
 
 router.get("/home", function (req, res, next) {
   res.render("index", { title: "Home", page: "home", displayName: "" });
-});
-
-/* GET about page */
-router.get("/about", function (req, res, next) {
-  res.render("index", { title: "About Us", page: "about", displayName: "" });
 });
 
 /* GET gallery page */
@@ -115,16 +110,6 @@ router.post("/login", function (req, res, next) {
   })(req, res, next);
 });
 
-router.get("/about", (req, res) => {
-  // Access session data
-  // Render your template with the session data
-  res.render("/index", {
-    title: "About Us",
-    page: "about",
-    displayName: "",
-  });
-});
-
 /* GET Reservation page */
 router.get("/reservation", function (req, res, next) {
   res.render("index", {
@@ -154,17 +139,20 @@ router.post(
   ) {
     // Instantiate a new user object
     // We have to do this because we do not have access to the user model
-    let newEmployee = new Employee({
+    console.log("Hello");
+    let newEmployee = new User({
       // Why lowercase username and why is everything else uppercase;
       FirstName: req.body.firstName,
       LastName: req.body.lastName,
       username: req.body.emailAddress,
       SecurityLevel: "FrontDeskAgent",
       EmailAddress: req.body.emailAddress,
+      userType: "employee",
     });
-
-    Employee.register(newEmployee, req.body.password, function (err: any) {
+    console.log("Hello1");
+    User.register(newEmployee, req.body.password, function (err: any) {
       if (err) {
+        console.log("Hello2");
         if (err.name == "UserExistsError") {
           console.error("ERROR: User already exists!");
           req.flash("registerMessage", "Registration Error");
@@ -172,7 +160,7 @@ router.post(
           console.error(err.name); // Other error
           req.flash("registerMessage", "Server Error");
         }
-
+        console.log("Hello3");
         return res.redirect("/employee-register");
       }
 
@@ -192,82 +180,65 @@ router.get("/register", function (req, res, next) {
 
 router.post("/register", async (req, res, next) => {
   {
-    let address = req.body.inputAddress;
-    let addressSplit = address.split(" ");
-    let streetNumber = addressSplit[0];
-    let streetName = addressSplit[1];
+    try {
+      let address = req.body.inputAddress;
+      let addressSplit = address.split(" ");
+      let streetNumber = addressSplit[0];
+      let streetName = addressSplit[1];
 
-    for (let i = 2; i < addressSplit.length; i++) {
-      streetName += " " + addressSplit[i];
-    }
-    // Instantiate a new user object
-    // We have to do this because we do not have access to the user model
-    let newGuest = new Guest({
-      // Why lowercase username and why is everything else uppercase;
-
-      FirstName: req.body.firstName,
-      LastName: req.body.lastName,
-      username: req.body.emailAddress,
-      SecurityLevel: "Guest",
-      ConfirmPassword: req.body.confirmPassword,
-      EmailAddress: req.body.emailAddress,
-      UnitNumber: req.body.inputUnitNumber,
-      StreetNumber: streetNumber,
-      StreetName: streetName,
-      City: req.body.inputCity,
-      Province: req.body.inputProvince,
-      Country: req.body.inputCountry,
-      PostalCode: req.body.inputPostalCode,
-    });
-
-    Guest.register(newGuest, req.body.password, function (err: any) {
-      if (err) {
-        if (err.name == "UserExistsError") {
-          console.error("ERROR: User already exists!");
-          req.flash("registerMessage", "Registration Error");
-        } else {
-          console.error(err.name); // Other error
-          req.flash("registerMessage", "Server Error");
-        }
-
-        return res.redirect("/register");
+      for (let i = 2; i < addressSplit.length; i++) {
+        streetName += " " + addressSplit[i];
       }
+      // Instantiate a new user object
+      // We have to do this because we do not have access to the user model
+      let newGuest = new Guest({
+        // Why lowercase username and why is everything else uppercase;
 
+        FirstName: req.body.firstName,
+        LastName: req.body.lastName,
+        username: req.body.emailAddress,
+        SecurityLevel: "Guest",
+        EmailAddress: req.body.emailAddress,
+        userType: "guest",
+        UnitNumber: req.body.inputUnitNumber,
+        StreetNumber: streetNumber,
+        StreetName: streetName,
+        City: req.body.inputCity,
+        Province: req.body.inputProvince,
+        Country: req.body.inputCountry,
+        PostalCode: req.body.inputPostalCode,
+      });
+
+      await User.register(newGuest, req.body.password);
+      // {
+      //   if (err) {
+      //     if (err.name == "UserExistsError") {
+      //       console.error("ERROR: User already exists!");
+      //       req.flash("registerMessage", "Registration Error");
+      //     } else {
+      //       console.error(err.name); // Other error
+      //       req.flash("registerMessage", "Server Error");
+      //     }
+
+      //     return res.redirect("/register");
+      //   }
+
+      //   return res.redirect("/");
+
+      //   // return passport.authenticate("local")(req, res, function () {
+      //   //   console.log("in auth function");
+
+      //   //   return res.redirect("/reservation-list");
+      //   // });
+      // // });
       return res.redirect("/");
-
-      // return passport.authenticate("local")(req, res, function () {
-      //   console.log("in auth function");
-
-      //   return res.redirect("/reservation-list");
-      // });
-    });
+    } catch (error) {
+      console.error("Error registering guest:", error);
+      req.flash("registerMessage", "Server Error");
+      return res.redirect("/register");
+    }
   }
 });
-
-// router.get("/reservation-list", async (req, res, next) => {
-//   try {
-//     const reservationsCollection = await Reservation.find({}).exec();
-
-//     let roomStatus;
-//     for (let index = 0; index < reservationsCollection.length; index++) {
-//       roomStatus = await Room.find({
-//         RoomNumber: reservationsCollection[index].RoomNumber,
-//       }).exec();
-
-//       console.log(`Room Status: ${roomStatus[index].RoomStatus}`);
-//     }
-
-//     res.render("index", {
-//       title: "Reservation List",
-//       page: "reservation-list",
-//       displayName: "",
-//       reservations: reservationsCollection,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).send("Internal Server Error"); // Handle the error gracefully
-//   }
-// });
 
 router.get("/reservation-list", async (req, res, next) => {
   try {

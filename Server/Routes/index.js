@@ -6,18 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const reservation_1 = __importDefault(require("../Models/reservation"));
-const guest_1 = __importDefault(require("../Models/guest"));
 const room_1 = __importDefault(require("../Models/room"));
-const user_1 = __importDefault(require("../Models/user"));
+const user_1 = require("../Models/user");
 const passport_1 = __importDefault(require("passport"));
 router.get("/", function (req, res, next) {
     res.render("index", { title: "Home", page: "home", displayName: "" });
 });
 router.get("/home", function (req, res, next) {
     res.render("index", { title: "Home", page: "home", displayName: "" });
-});
-router.get("/about", function (req, res, next) {
-    res.render("index", { title: "About Us", page: "about", displayName: "" });
 });
 router.get("/gallery", function (req, res, next) {
     res.render("index", { title: "Gallery", page: "gallery", displayName: "" });
@@ -45,7 +41,7 @@ router.post("/guest-login", async (req, res, next) => {
     let Username = req.body.username;
     let Password = req.body.password;
     try {
-        const loggedInGuest = await guest_1.default.findOne({
+        const loggedInGuest = await user_1.Guest.findOne({
             $and: [{ EmailAddress: Username }, { ConfirmPassword: Password }],
         }).exec();
         if (loggedInGuest) {
@@ -96,13 +92,6 @@ router.post("/login", function (req, res, next) {
         });
     })(req, res, next);
 });
-router.get("/about", (req, res) => {
-    res.render("/index", {
-        title: "About Us",
-        page: "about",
-        displayName: "",
-    });
-});
 router.get("/reservation", function (req, res, next) {
     res.render("index", {
         title: "Reservations",
@@ -120,15 +109,19 @@ router.get("/employee-register", function (req, res, next) {
     });
 });
 router.post("/employee-register", function (req, res, next) {
-    let newEmployee = new user_1.default({
+    console.log("Hello");
+    let newEmployee = new user_1.User({
         FirstName: req.body.firstName,
         LastName: req.body.lastName,
         username: req.body.emailAddress,
         SecurityLevel: "FrontDeskAgent",
         EmailAddress: req.body.emailAddress,
+        userType: "employee",
     });
-    user_1.default.register(newEmployee, req.body.password, function (err) {
+    console.log("Hello1");
+    user_1.User.register(newEmployee, req.body.password, function (err) {
         if (err) {
+            console.log("Hello2");
             if (err.name == "UserExistsError") {
                 console.error("ERROR: User already exists!");
                 req.flash("registerMessage", "Registration Error");
@@ -137,6 +130,7 @@ router.post("/employee-register", function (req, res, next) {
                 console.error(err.name);
                 req.flash("registerMessage", "Server Error");
             }
+            console.log("Hello3");
             return res.redirect("/employee-register");
         }
         return res.redirect("/reservation-list");
@@ -151,42 +145,37 @@ router.get("/register", function (req, res, next) {
 });
 router.post("/register", async (req, res, next) => {
     {
-        let address = req.body.inputAddress;
-        let addressSplit = address.split(" ");
-        let streetNumber = addressSplit[0];
-        let streetName = addressSplit[1];
-        for (let i = 2; i < addressSplit.length; i++) {
-            streetName += " " + addressSplit[i];
-        }
-        let newGuest = new guest_1.default({
-            FirstName: req.body.firstName,
-            LastName: req.body.lastName,
-            username: req.body.emailAddress,
-            SecurityLevel: "Guest",
-            ConfirmPassword: req.body.confirmPassword,
-            EmailAddress: req.body.emailAddress,
-            UnitNumber: req.body.inputUnitNumber,
-            StreetNumber: streetNumber,
-            StreetName: streetName,
-            City: req.body.inputCity,
-            Province: req.body.inputProvince,
-            Country: req.body.inputCountry,
-            PostalCode: req.body.inputPostalCode,
-        });
-        guest_1.default.register(newGuest, req.body.password, function (err) {
-            if (err) {
-                if (err.name == "UserExistsError") {
-                    console.error("ERROR: User already exists!");
-                    req.flash("registerMessage", "Registration Error");
-                }
-                else {
-                    console.error(err.name);
-                    req.flash("registerMessage", "Server Error");
-                }
-                return res.redirect("/register");
+        try {
+            let address = req.body.inputAddress;
+            let addressSplit = address.split(" ");
+            let streetNumber = addressSplit[0];
+            let streetName = addressSplit[1];
+            for (let i = 2; i < addressSplit.length; i++) {
+                streetName += " " + addressSplit[i];
             }
+            let newGuest = new user_1.Guest({
+                FirstName: req.body.firstName,
+                LastName: req.body.lastName,
+                username: req.body.emailAddress,
+                SecurityLevel: "Guest",
+                EmailAddress: req.body.emailAddress,
+                userType: "guest",
+                UnitNumber: req.body.inputUnitNumber,
+                StreetNumber: streetNumber,
+                StreetName: streetName,
+                City: req.body.inputCity,
+                Province: req.body.inputProvince,
+                Country: req.body.inputCountry,
+                PostalCode: req.body.inputPostalCode,
+            });
+            await user_1.User.register(newGuest, req.body.password);
             return res.redirect("/");
-        });
+        }
+        catch (error) {
+            console.error("Error registering guest:", error);
+            req.flash("registerMessage", "Server Error");
+            return res.redirect("/register");
+        }
     }
 });
 router.get("/reservation-list", async (req, res, next) => {

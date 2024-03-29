@@ -18,8 +18,8 @@ import flash from "connect-flash"; // authentication messaging
 let localStrategy = passportLocal.Strategy; // Alias
 
 // User Model
-import User from "../Models/user";
-import Guest from "../Models/guest";
+import { User, Guest } from "../Models/user";
+// import Guest from "../Models/guest";
 
 // App Configuration
 import indexRouter from "../Routes/index";
