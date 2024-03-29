@@ -16,6 +16,9 @@
           <th scope="col">Reservation Start Date</th>
           <th scope="col">Reservation End Date</th>
           <th scope="col">Number of People</th>
+          <th scope="col">Room Status</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
           <th scope="col"></th>
           <th scope="col"></th>
         </tr>
@@ -26,10 +29,11 @@
         <!-- Repeatable Row-->
         <tr>
           <th scope="row" class="text-center"><%= count + 1 %></th>
-          <td><%= reservations[count]._id %></td>
+          <td><%= reservations[count].ReservationID %></td>
           <td name="ReservationStartDate"><%= reservations[count].ReservationStartDate %></td>
           <td name="ReservationEndDate"><%= reservations[count].ReservationEndDate %></td>
           <td><%= reservations[count].NumberOfGuests %></td>
+          <td><%= reservations[count].RoomStatus%></td>
           <td class="text-center"><a href="/reservation-edit/<%= reservations[count].EmailAddress %>" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>Update Reservation</button></td>
           <td class="text-center"><a href="/delete/<%= reservations[count].EmailAddress %>" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>Delete Reservation</button></td>
           <td class="text-center"><a href="/check-in/<%= reservations[count].ReservationID %>" class="btn btn-dark btn-sm"><i class="fas fa-trash-alt fa-sm"></i>Check-In</button></td>
