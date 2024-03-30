@@ -408,87 +408,87 @@
     console.log("Login Page");
 
     // Get the error message 
-    let errorMessage = document.getElementById("messageArea");
+    // let errorMessage = document.getElementById("messageArea");
 
-    // Hide the error message because when the page loads there should not be any errors if the user has not entered anything
-    errorMessage.style.display = "none";
+    // // Hide the error message because when the page loads there should not be any errors if the user has not entered anything
+    // errorMessage.style.display = "none";
 
-    document.getElementById("loginButton").addEventListener("click", function (event) {
+    // document.getElementById("loginButton").addEventListener("click", function (event) {
 
-      let loginSuccess = false;
+    //   let loginSuccess = false;
 
-      let keys = Object.keys(localStorage);
+    //   let keys = Object.keys(localStorage);
 
-      console.log(keys);
+    //   console.log(keys);
 
-      // for every user in the users.json file
-      for (const key of keys) {
+    //   // for every user in the users.json file
+    //   for (const key of keys) {
 
-        let user_data = localStorage.getItem(key);
-        let newUser = new core.User();
-        let newGuest = new core.Guest();
-        newUser.deserialize(user_data);
-        let encryptedPassword = window.btoa(password.value);
-        if (newUser.SecurityLevel === "guest") {
+    //     let user_data = localStorage.getItem(key);
+    //     let newUser = new core.User();
+    //     let newGuest = new core.Guest();
+    //     newUser.deserialize(user_data);
+    //     let encryptedPassword = window.btoa(password.value);
+    //     if (newUser.SecurityLevel === "guest") {
 
-          if (userName.value === newUser.UserName && encryptedPassword === newUser.Password) {
-            // get the user data from the file and assign to our empty user object
-            // newUser.fromJSON(key);
-            loginSuccess = true;
+    //       if (userName.value === newUser.UserName && encryptedPassword === newUser.Password) {
+    //         // get the user data from the file and assign to our empty user object
+    //         // newUser.fromJSON(key);
+    //         loginSuccess = true;
 
-            // if username and password matches - success.. the perform the login sequence
-            if (loginSuccess) {
+    //         // if username and password matches - success.. the perform the login sequence
+    //         if (loginSuccess) {
 
-              newGuest.deserialize(user_data);
+    //           newGuest.deserialize(user_data);
 
-              // add user to session storage
-              sessionStorage.setItem("guest", JSON.stringify(newGuest.serialize()));
+    //           // add user to session storage
+    //           sessionStorage.setItem("guest", JSON.stringify(newGuest.serialize()));
 
-              // hide any error message
-              errorMessage.style.display = "none";
+    //           // hide any error message
+    //           errorMessage.style.display = "none";
 
-              // redirect the user to the secure area of our site - contact-list.html
-              location.href = "/about";
-            }
-            // else if bad credentials were entered...
-            else {
-              // display an error message
-              $("#username").trigger("focus").trigger("select");
-              errorMessage.addClass("alert alert-danger").text("Error: Invalid Login Information").show();
-            }
-            break;
-          }
-        }
-        else {
+    //           // redirect the user to the secure area of our site - contact-list.html
+    //           location.href = "/about";
+    //         }
+    //         // else if bad credentials were entered...
+    //         else {
+    //           // display an error message
+    //           $("#username").trigger("focus").trigger("select");
+    //           errorMessage.addClass("alert alert-danger").text("Error: Invalid Login Information").show();
+    //         }
+    //         break;
+    //       }
+    //     }
+    //     else {
 
-          // check if the username and password entered in the form matches this user
-          if (userName.value === newUser.UserName && encryptedPassword === newUser.Password) {
-            // get the user data from the file and assign to our empty user object
-            // newUser.fromJSON(key);
-            loginSuccess = true;
+    //       // check if the username and password entered in the form matches this user
+    //       if (userName.value === newUser.UserName && encryptedPassword === newUser.Password) {
+    //         // get the user data from the file and assign to our empty user object
+    //         // newUser.fromJSON(key);
+    //         loginSuccess = true;
 
-            // if username and password matches - success.. the perform the login sequence
-            if (loginSuccess) {
-              // add user to session storage
-              sessionStorage.setItem("front_desk_agent", JSON.stringify(newUser.serialize()));
+    //         // if username and password matches - success.. the perform the login sequence
+    //         if (loginSuccess) {
+    //           // add user to session storage
+    //           sessionStorage.setItem("front_desk_agent", JSON.stringify(newUser.serialize()));
 
-              // hide any error message
-              errorMessage.style.display = "none";
+    //           // hide any error message
+    //           errorMessage.style.display = "none";
 
-              // redirect the user to the secure area of our site - contact-list.html
-              location.href = "/about";
-            }
-            // else if bad credentials were entered...
-            else {
-              // display an error message
-              $("#username").trigger("focus").trigger("select");
-              errorMessage.addClass("alert alert-danger").text("Error: Invalid Login Information").show();
-            }
-            break;
-          }
-        }
-      }
-    });
+    //           // redirect the user to the secure area of our site - contact-list.html
+    //           location.href = "/about";
+    //         }
+    //         // else if bad credentials were entered...
+    //         else {
+    //           // display an error message
+    //           $("#username").trigger("focus").trigger("select");
+    //           errorMessage.addClass("alert alert-danger").text("Error: Invalid Login Information").show();
+    //         }
+    //         break;
+    //       }
+    //     }
+    //   }
+    // });
   };
 
   /**

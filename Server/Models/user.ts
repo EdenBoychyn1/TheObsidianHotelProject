@@ -31,7 +31,7 @@ interface GuestFields {
 type UserType = "employee" | "guest";
 
 // Define base user document interface
-interface UserDocument extends Document, CommonFields {
+export interface UserDocument extends Document, CommonFields {
   userType: UserType;
 }
 

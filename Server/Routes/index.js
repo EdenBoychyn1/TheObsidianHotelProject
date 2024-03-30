@@ -9,52 +9,45 @@ const reservation_1 = __importDefault(require("../Models/reservation"));
 const room_1 = __importDefault(require("../Models/room"));
 const user_1 = require("../Models/user");
 const passport_1 = __importDefault(require("passport"));
+const Util_1 = require("../Util");
 router.get("/", function (req, res, next) {
-    res.render("index", { title: "Home", page: "home", displayName: "" });
+    res.render("index", {
+        title: "Home",
+        page: "home",
+        userType: (0, Util_1.UserDisplayName)(req),
+    });
 });
 router.get("/home", function (req, res, next) {
-    res.render("index", { title: "Home", page: "home", displayName: "" });
+    res.render("index", {
+        title: "Home",
+        page: "home",
+        userType: (0, Util_1.UserDisplayName)(req),
+    });
 });
 router.get("/gallery", function (req, res, next) {
-    res.render("index", { title: "Gallery", page: "gallery", displayName: "" });
+    res.render("index", {
+        title: "Gallery",
+        page: "gallery",
+        userType: (0, Util_1.UserDisplayName)(req),
+    });
 });
 router.get("/rooms", function (req, res, next) {
-    res.render("index", { title: "Room", page: "rooms", displayName: "" });
+    res.render("index", {
+        title: "Room",
+        page: "rooms",
+        userType: (0, Util_1.UserDisplayName)(req),
+    });
 });
 router.get("/login", function (req, res, next) {
-    res.render("index", {
-        title: "Login",
-        page: "login",
-        displayName: "",
-        messages: "",
-    });
-});
-router.get("/guest-login", function (req, res, next) {
-    res.render("index", {
-        title: "Login",
-        page: "login",
-        displayName: "",
-        messages: "",
-    });
-});
-router.post("/guest-login", async (req, res, next) => {
-    let Username = req.body.username;
-    let Password = req.body.password;
-    try {
-        const loggedInGuest = await user_1.Guest.findOne({
-            $and: [{ EmailAddress: Username }, { ConfirmPassword: Password }],
-        }).exec();
-        if (loggedInGuest) {
-            res.redirect("/");
-        }
-        else {
-            res.redirect("/guest-login");
-        }
+    if (!req.user) {
+        res.render("index", {
+            title: "Login",
+            page: "login",
+            userType: "",
+            messages: req.flash("loginMessage"),
+        });
     }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
-    }
+    return res.redirect("/");
 });
 router.get("/logout", function (req, res, next) {
     req.logout(function (err) {
@@ -83,12 +76,8 @@ router.post("/login", function (req, res, next) {
                 console.error(err);
                 res.end(err);
             }
-            if (user.SecurityLevel === "Guest") {
-                res.redirect("/");
-            }
-            else {
-                res.redirect("/reservation-list");
-            }
+            const userType = user.userType;
+            res.render("index", { title: "Home", page: "home", userType: userType });
         });
     })(req, res, next);
 });
@@ -96,17 +85,19 @@ router.get("/reservation", function (req, res, next) {
     res.render("index", {
         title: "Reservations",
         page: "reservation",
-        displayName: "",
+        userType: (0, Util_1.UserDisplayName)(req),
     });
 });
 router.get("/employee-register", function (req, res, next) {
-    console.log("Hello");
-    res.render("index", {
-        title: "Employee Registration ",
-        page: "employee-register",
-        displayName: "",
-        messages: "",
-    });
+    if (!req.user) {
+        res.render("index", {
+            title: "Employee Registration ",
+            page: "employee-register",
+            userType: "",
+            messages: req.flash("registerMessage"),
+        });
+    }
+    return res.redirect("/");
 });
 router.post("/employee-register", function (req, res, next) {
     console.log("Hello");
@@ -137,11 +128,15 @@ router.post("/employee-register", function (req, res, next) {
     });
 });
 router.get("/register", function (req, res, next) {
-    res.render("index", {
-        title: "Guest Registration ",
-        page: "register",
-        displayName: "",
-    });
+    if (!req.user) {
+        res.render("index", {
+            title: "Guest Registration ",
+            page: "register",
+            userType: (0, Util_1.UserDisplayName)(req),
+            messages: "",
+        });
+    }
+    return res.redirect("/");
 });
 router.post("/register", async (req, res, next) => {
     {
@@ -184,7 +179,7 @@ router.get("/reservation-list", async (req, res, next) => {
         res.render("index", {
             title: "Reservation List",
             page: "reservation-list",
-            displayName: "",
+            userType: "",
             reservations: reservationsCollection,
         });
     }
@@ -198,7 +193,7 @@ router.get("/reservation-add", function (req, res, next) {
         title: "Add",
         page: "reservation-add",
         reservation: "",
-        displayName: "",
+        userType: "",
     });
 });
 router.post("/reservation", async function (req, res, next) {
@@ -414,7 +409,7 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
             title: "Edit",
             page: "reservation-edit",
             reservation: reservation,
-            displayName: "",
+            userType: "",
         });
     }
     catch (err) {
