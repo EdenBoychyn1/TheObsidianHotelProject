@@ -7,6 +7,8 @@ const mongoose_1 = __importDefault(require("mongoose"));
 const Schema = mongoose_1.default.Schema;
 const ReservationSchema = new Schema({
     ReservationID: String,
+    GuestFirstName: String,
+    GuestLastName: String,
     ReservationStartDate: String,
     ReservationEndDate: String,
     NumberOfGuests: Number,

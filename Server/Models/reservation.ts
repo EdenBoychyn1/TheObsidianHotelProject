@@ -5,6 +5,8 @@ const Schema = mongoose.Schema; // strucuture for a class
 const ReservationSchema = new Schema(
   {
     ReservationID: String,
+    GuestFirstName: String,
+    GuestLastName: String,
     ReservationStartDate: String,
     ReservationEndDate: String,
     NumberOfGuests: Number,

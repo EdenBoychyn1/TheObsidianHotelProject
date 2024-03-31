@@ -3,14 +3,10 @@ const Schema = mongoose.Schema; // strucuture for a class
 
 import passportLocalMongoose from "passport-local-mongoose";
 
-const GuestSchema = new Schema(
+const AccompaniedGuestSchema = new Schema(
   {
     FirstName: String,
     LastName: String,
-    username: String,
-    SecurityLevel: String,
-    EmailAddress: String,
-    ConfirmPassword: String,
     UnitNumber: String,
     StreetNumber: String,
     StreetName: String,
@@ -32,18 +28,14 @@ const GuestSchema = new Schema(
   }
 );
 
-GuestSchema.plugin(passportLocalMongoose);
+AccompaniedGuestSchema.plugin(passportLocalMongoose);
 
-const Model = mongoose.model("Guest", GuestSchema);
+const Model = mongoose.model("Guest", AccompaniedGuestSchema);
 
 declare global {
-  export type GuestDocument = mongoose.Document & {
+  export type AccompaniedGuestDocument = mongoose.Document & {
     FirstName: String;
     LastName: String;
-    username: String;
-    SecurityLevel: String;
-    EmailAddress: String;
-    ConfirmPassword: String;
     UnitNumber: String;
     StreetNumber: String;
     StreetName: String;

@@ -6,59 +6,53 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const reservation_1 = __importDefault(require("../Models/reservation"));
-const guest_1 = __importDefault(require("../Models/guest"));
 const room_1 = __importDefault(require("../Models/room"));
-const user_1 = __importDefault(require("../Models/user"));
+const user_1 = require("../Models/user");
 const passport_1 = __importDefault(require("passport"));
+const Util_1 = require("../Util");
 router.get("/", function (req, res, next) {
-    res.render("index", { title: "Home", page: "home", displayName: "" });
+    res.render("index", {
+        title: "Home",
+        page: "home",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
+    });
 });
 router.get("/home", function (req, res, next) {
-    res.render("index", { title: "Home", page: "home", displayName: "" });
-});
-router.get("/about", function (req, res, next) {
-    res.render("index", { title: "About Us", page: "about", displayName: "" });
+    res.render("index", {
+        title: "Home",
+        page: "home",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
+    });
 });
 router.get("/gallery", function (req, res, next) {
-    res.render("index", { title: "Gallery", page: "gallery", displayName: "" });
+    res.render("index", {
+        title: "Gallery",
+        page: "gallery",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
+    });
 });
 router.get("/rooms", function (req, res, next) {
-    res.render("index", { title: "Room", page: "rooms", displayName: "" });
+    res.render("index", {
+        title: "Room",
+        page: "rooms",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
+    });
 });
 router.get("/login", function (req, res, next) {
-    res.render("index", {
-        title: "Login",
-        page: "login",
-        displayName: "",
-        messages: "",
-    });
-});
-router.get("/guest-login", function (req, res, next) {
-    res.render("index", {
-        title: "Login",
-        page: "login",
-        displayName: "",
-        messages: "",
-    });
-});
-router.post("/guest-login", async (req, res, next) => {
-    let Username = req.body.username;
-    let Password = req.body.password;
-    try {
-        const loggedInGuest = await guest_1.default.findOne({
-            $and: [{ EmailAddress: Username }, { ConfirmPassword: Password }],
-        }).exec();
-        if (loggedInGuest) {
-            res.redirect("/");
-        }
-        else {
-            res.redirect("/guest-login");
-        }
+    if (!req.user) {
+        res.render("index", {
+            title: "Login",
+            page: "login",
+            userType: "",
+            messages: req.flash("loginMessage"),
+            emailaddress: (0, Util_1.FindEmailAddress)(req),
+        });
     }
-    catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
-    }
+    return res.redirect("/");
 });
 router.get("/logout", function (req, res, next) {
     req.logout(function (err) {
@@ -87,48 +81,50 @@ router.post("/login", function (req, res, next) {
                 console.error(err);
                 res.end(err);
             }
-            if (user.SecurityLevel === "Guest") {
-                res.redirect("/");
-            }
-            else {
-                res.redirect("/reservation-list");
-            }
+            const userType = user.userType;
+            res.render("index", {
+                title: "Home",
+                page: "home",
+                userType: userType,
+                emailaddress: (0, Util_1.FindEmailAddress)(req),
+            });
         });
     })(req, res, next);
-});
-router.get("/about", (req, res) => {
-    res.render("/index", {
-        title: "About Us",
-        page: "about",
-        displayName: "",
-    });
 });
 router.get("/reservation", function (req, res, next) {
     res.render("index", {
         title: "Reservations",
         page: "reservation",
-        displayName: "",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.get("/employee-register", function (req, res, next) {
-    console.log("Hello");
-    res.render("index", {
-        title: "Employee Registration ",
-        page: "employee-register",
-        displayName: "",
-        messages: "",
-    });
+    if (req.user) {
+        res.render("index", {
+            title: "Employee Registration",
+            page: "employee-register",
+            userType: (0, Util_1.UserSecurityLevel)(req),
+            messages: req.flash("registerMessage"),
+            emailaddress: (0, Util_1.FindEmailAddress)(req),
+        });
+    }
+    return res.redirect("/");
 });
 router.post("/employee-register", function (req, res, next) {
-    let newEmployee = new user_1.default({
+    console.log("Hello");
+    let newEmployee = new user_1.User({
         FirstName: req.body.firstName,
         LastName: req.body.lastName,
         username: req.body.emailAddress,
         SecurityLevel: "FrontDeskAgent",
         EmailAddress: req.body.emailAddress,
+        userType: "employee",
     });
-    user_1.default.register(newEmployee, req.body.password, function (err) {
+    console.log("Hello1");
+    user_1.User.register(newEmployee, req.body.password, function (err) {
         if (err) {
+            console.log("Hello2");
             if (err.name == "UserExistsError") {
                 console.error("ERROR: User already exists!");
                 req.flash("registerMessage", "Registration Error");
@@ -137,6 +133,7 @@ router.post("/employee-register", function (req, res, next) {
                 console.error(err.name);
                 req.flash("registerMessage", "Server Error");
             }
+            console.log("Hello3");
             return res.redirect("/employee-register");
         }
         return res.redirect("/reservation-list");
@@ -146,58 +143,61 @@ router.get("/register", function (req, res, next) {
     res.render("index", {
         title: "Guest Registration ",
         page: "register",
-        displayName: "",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        messages: "",
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.post("/register", async (req, res, next) => {
     {
-        let address = req.body.inputAddress;
-        let addressSplit = address.split(" ");
-        let streetNumber = addressSplit[0];
-        let streetName = addressSplit[1];
-        for (let i = 2; i < addressSplit.length; i++) {
-            streetName += " " + addressSplit[i];
-        }
-        let newGuest = new guest_1.default({
-            FirstName: req.body.firstName,
-            LastName: req.body.lastName,
-            username: req.body.emailAddress,
-            SecurityLevel: "Guest",
-            ConfirmPassword: req.body.confirmPassword,
-            EmailAddress: req.body.emailAddress,
-            UnitNumber: req.body.inputUnitNumber,
-            StreetNumber: streetNumber,
-            StreetName: streetName,
-            City: req.body.inputCity,
-            Province: req.body.inputProvince,
-            Country: req.body.inputCountry,
-            PostalCode: req.body.inputPostalCode,
-        });
-        guest_1.default.register(newGuest, req.body.password, function (err) {
-            if (err) {
-                if (err.name == "UserExistsError") {
-                    console.error("ERROR: User already exists!");
-                    req.flash("registerMessage", "Registration Error");
-                }
-                else {
-                    console.error(err.name);
-                    req.flash("registerMessage", "Server Error");
-                }
-                return res.redirect("/register");
+        try {
+            let address = req.body.inputAddress;
+            let addressSplit = address.split(" ");
+            let streetNumber = addressSplit[0];
+            let streetName = addressSplit[1];
+            for (let i = 2; i < addressSplit.length; i++) {
+                streetName += " " + addressSplit[i];
             }
+            let newGuest = new user_1.Guest({
+                FirstName: req.body.firstName,
+                LastName: req.body.lastName,
+                username: req.body.emailAddress,
+                SecurityLevel: "Guest",
+                EmailAddress: req.body.emailAddress,
+                userType: "guest",
+                UnitNumber: req.body.inputUnitNumber,
+                StreetNumber: streetNumber,
+                StreetName: streetName,
+                City: req.body.inputCity,
+                Province: req.body.inputProvince,
+                Country: req.body.inputCountry,
+                PostalCode: req.body.inputPostalCode,
+            });
+            await user_1.User.register(newGuest, req.body.password);
             return res.redirect("/");
-        });
+        }
+        catch (error) {
+            console.error("Error registering guest:", error);
+            req.flash("registerMessage", "Server Error");
+            return res.redirect("/register");
+        }
     }
 });
 router.get("/reservation-list", async (req, res, next) => {
     try {
-        const reservationsCollection = await reservation_1.default.find({}).exec();
-        res.render("index", {
-            title: "Reservation List",
-            page: "reservation-list",
-            displayName: "",
-            reservations: reservationsCollection,
-        });
+        if (req.user) {
+            const reservationsCollection = await reservation_1.default.find({}).exec();
+            res.render("index", {
+                title: "Reservation List",
+                page: "reservation-list",
+                userType: (0, Util_1.UserSecurityLevel)(req),
+                reservations: reservationsCollection,
+                emailaddress: (0, Util_1.FindEmailAddress)(req),
+            });
+        }
+        else {
+            return res.redirect("/");
+        }
     }
     catch (error) {
         console.error(error);
@@ -209,10 +209,12 @@ router.get("/reservation-add", function (req, res, next) {
         title: "Add",
         page: "reservation-add",
         reservation: "",
-        displayName: "",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.post("/reservation", async function (req, res, next) {
+    console.log(`EmailAddress: ${req.body.emailAddress}`);
     try {
         let firstName = req.body.inputReservationFirstName;
         let lastName = req.body.inputReservationLastName;
@@ -267,6 +269,8 @@ router.post("/reservation", async function (req, res, next) {
         if (!conflictFound) {
             let newReservation = new reservation_1.default({
                 ReservationID: reservationId,
+                GuestFirstName: firstName,
+                GuestLastName: lastName,
                 ReservationStartDate: reservationStartDate,
                 ReservationEndDate: reservationEndDate,
                 NumberOfGuests: numberOfGuests,
@@ -284,7 +288,7 @@ router.post("/reservation", async function (req, res, next) {
             });
             await newReservation.save();
         }
-        res.redirect("/reservation-list");
+        res.redirect("/");
     }
     catch (error) {
         console.log(error);
@@ -346,6 +350,8 @@ router.post("/reservation-add", async function (req, res, next) {
         if (!conflictFound) {
             let newReservation = new reservation_1.default({
                 ReservationID: reservationId,
+                GuestFirstName: firstName,
+                GuestLastName: lastName,
                 ReservationStartDate: reservationStartDate,
                 ReservationEndDate: reservationEndDate,
                 NumberOfGuests: numberOfGuests,
@@ -425,7 +431,8 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
             title: "Edit",
             page: "reservation-edit",
             reservation: reservation,
-            displayName: "",
+            userType: (0, Util_1.UserSecurityLevel)(req),
+            emailaddress: (0, Util_1.FindEmailAddress)(req),
         });
     }
     catch (err) {
