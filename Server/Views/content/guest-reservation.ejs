@@ -1,0 +1,42 @@
+<!-- <div class="hero-text-box"> -->
+<h1 class="primary-heading">
+  <i class="fa-solid fa-hotel"></i> Your Reservations
+</h1>
+
+<div class="row">
+  <div class="col">
+
+    
+
+    <table class="table table-striped table-bordered table-hover">
+      <thead class="table-light">
+        <tr>
+          <th scope="col" class="text-center">#</th>
+          <th scope="col">Reservation ID</th>
+          <th scope="col">Reservation Start Date</th>
+          <th scope="col">Reservation End Date</th>
+          <th scope="col">Number of People</th>
+          <th scope="col">Room Status</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody id="reservationList">
+
+        <% for(let count = 0; count < reservations.length; count++) { %>
+        <!-- Repeatable Row-->
+        <tr>
+          <th scope="row" class="text-center"><%= count + 1 %></th>
+          <td><%= reservations[count].ReservationID %></td>
+          <td name="ReservationStartDate"><%= reservations[count].ReservationStartDate %></td>
+          <td name="ReservationEndDate"><%= reservations[count].ReservationEndDate %></td>
+          <td><%= reservations[count].NumberOfGuests %></td>
+          <td><%= reservations[count].RoomStatus%></td>
+          <td class="text-center"><a href="/reservation-edit/<%= reservations[count].EmailAddress %>" class="btn btn-primary btn-sm edit"><i class="fas fa-edit fa-sm"></i>Update Reservation</button></td>
+          <td class="text-center"><a href="/delete/<%= reservations[count].EmailAddress %>" class="btn btn-danger btn-sm delete"><i class="fas fa-trash-alt fa-sm"></i>Delete Reservation</button></td>
+        </tr> 
+          <% } %>
+      </tbody>
+    </table>
+  </div>
+</div>

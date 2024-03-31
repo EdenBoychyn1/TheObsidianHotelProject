@@ -204,6 +204,29 @@ router.get("/reservation-list", async (req, res, next) => {
         res.status(500).send("Internal Server Error");
     }
 });
+router.get("/guest-reservation", async (req, res, next) => {
+    try {
+        if (req.user) {
+            const reservationsCollection = await reservation_1.default.find({
+                EmailAddress: (0, Util_1.FindEmailAddress)(req),
+            }).exec();
+            res.render("index", {
+                title: "Your Reservations",
+                page: "guest-reservation",
+                userType: (0, Util_1.UserSecurityLevel)(req),
+                reservations: reservationsCollection,
+                emailaddress: (0, Util_1.FindEmailAddress)(req),
+            });
+        }
+        else {
+            return res.redirect("/");
+        }
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
 router.get("/reservation-add", function (req, res, next) {
     res.render("index", {
         title: "Add",
@@ -402,9 +425,15 @@ router.get("/check-out/:ReservationID", async function (req, res, next) {
 });
 router.get("/delete/:EmailAddress", async function (req, res, next) {
     try {
+        let UserType = (0, Util_1.UserSecurityLevel)(req);
         let emailAddress = req.params.EmailAddress;
         await reservation_1.default.deleteOne({ EmailAddress: emailAddress });
-        res.redirect("/reservation-list");
+        if (UserType === "employee") {
+            res.redirect("/reservation-list");
+        }
+        else if (UserType === "guest") {
+            res.redirect("/guest-reservation");
+        }
     }
     catch (error) {
         console.log(error);
@@ -441,8 +470,8 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
     }
 });
 router.post("/reservation-edit/:EmailAddress", async (req, res, next) => {
-    console.log("Hello");
     try {
+        let UserType = (0, Util_1.UserSecurityLevel)(req);
         let emailAddress = req.params.EmailAddress;
         let reservationStartDate = req.body.inputCheckInDate;
         let reservationEndDate = req.body.inputCheckOutDate;
@@ -471,7 +500,12 @@ router.post("/reservation-edit/:EmailAddress", async (req, res, next) => {
             },
         }).exec();
         console.log(`Billing Province ${updatedReservation?.BillingProvince}`);
-        res.redirect("/reservation-list");
+        if (UserType === "employee") {
+            res.redirect("/reservation-list");
+        }
+        else if (UserType === "guest") {
+            res.redirect("/guest-reservation");
+        }
     }
     catch (error) {
         console.log(error);

@@ -11,8 +11,6 @@ import { FindEmailAddress, UserSecurityLevel } from "../Util";
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  // let securityLevel = req.user ? req.session : "Guest"; // Assuming you're using Passport and the user is stored in req.user
-  // let headerTemplate = securityLevel === "Employee" ? "employee-header" : "header";
   res.render("index", {
     title: "Home",
     page: "home",
@@ -126,12 +124,6 @@ router.post("/login", function (req, res, next) {
         console.error(err);
         res.end(err);
       }
-
-      // if (user.userType === "Guest") {
-      //   res.redirect("/");
-      // } else if (user.userType === "employee") {
-      //   res.redirect("/reservation-list");
-      // }
 
       const userType = user.userType;
       res.render("index", {
@@ -289,6 +281,31 @@ router.get("/reservation-list", async (req, res, next) => {
       res.render("index", {
         title: "Reservation List",
         page: "reservation-list",
+        userType: UserSecurityLevel(req),
+        reservations: reservationsCollection,
+        emailaddress: FindEmailAddress(req),
+      });
+    } else {
+      return res.redirect("/");
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal Server Error"); // Handle the error gracefully
+  }
+});
+
+router.get("/guest-reservation", async (req, res, next) => {
+  try {
+    // console.log(`Email Address: ${FindEmailAddress(req)}`);
+    if (req.user) {
+      const reservationsCollection = await Reservation.find({
+        EmailAddress: FindEmailAddress(req),
+      }).exec();
+
+      // Render the page with the reservations data
+      res.render("index", {
+        title: "Your Reservations",
+        page: "guest-reservation",
         userType: UserSecurityLevel(req),
         reservations: reservationsCollection,
         emailaddress: FindEmailAddress(req),
@@ -574,11 +591,16 @@ router.get("/check-out/:ReservationID", async function (req, res, next) {
 // My Code that I spent 2 hours wondering why my delete middleware method wasn't working.
 router.get("/delete/:EmailAddress", async function (req, res, next) {
   try {
+    let UserType = UserSecurityLevel(req);
     let emailAddress = req.params.EmailAddress;
 
     await Reservation.deleteOne({ EmailAddress: emailAddress });
 
-    res.redirect("/reservation-list");
+    if (UserType === "employee") {
+      res.redirect("/reservation-list");
+    } else if (UserType === "guest") {
+      res.redirect("/guest-reservation");
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");
@@ -621,10 +643,10 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
 
 /* Display the Edit Page with Data injected from the db */
 router.post("/reservation-edit/:EmailAddress", async (req, res, next) => {
-  console.log("Hello");
-
   //instantiate a new contact to edit
   try {
+    let UserType = UserSecurityLevel(req);
+
     let emailAddress = req.params.EmailAddress;
     let reservationStartDate = req.body.inputCheckInDate;
     let reservationEndDate = req.body.inputCheckOutDate;
@@ -657,7 +679,12 @@ router.post("/reservation-edit/:EmailAddress", async (req, res, next) => {
       }
     ).exec();
     console.log(`Billing Province ${updatedReservation?.BillingProvince}`);
-    res.redirect("/reservation-list");
+
+    if (UserType === "employee") {
+      res.redirect("/reservation-list");
+    } else if (UserType === "guest") {
+      res.redirect("/guest-reservation");
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Internal Server Error");

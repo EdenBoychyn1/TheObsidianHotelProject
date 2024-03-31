@@ -38,6 +38,10 @@
       <li class="nav-item">
         <a class="nav-link" href="/reservation-list">Reservations List</a>
       </li>
+      <% } else if (userType === "guest") { %>
+        <li class="nav-item">
+          <a class="nav-link" href="/guest-reservation">Your Reservations</a>
+        </li>
       <% } %> <% if(userType) { %>
       <li class="nav-item">
         <a class="nav-link" href="/logout">Logout</a>

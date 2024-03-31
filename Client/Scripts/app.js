@@ -574,6 +574,17 @@
 
   }
 
+  function DisplayGuestReservationPage() {
+    console.log("Your Reservations");
+    $("a.delete").on("click", function (event) {
+      if (!confirm("Are you sure?")) {
+        event.preventDefault();
+        // refresh after deleting
+        location.href = "/guest-reservation";
+      }
+    });
+  }
+
   function DisplayReservationEditPage() {
     console.log("Reservation Edit Page");
 
@@ -664,6 +675,10 @@
       case "reservation-list":
         // Authorization();
         DisplayReservationListPage();
+        break;
+      case "guest-reservation":
+        // Authorization();
+        DisplayGuestReservationPage();
         break;
       case "reservation-edit":
         // Authorization();
