@@ -14,28 +14,32 @@ router.get("/", function (req, res, next) {
     res.render("index", {
         title: "Home",
         page: "home",
-        userType: (0, Util_1.UserDisplayName)(req),
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.get("/home", function (req, res, next) {
     res.render("index", {
         title: "Home",
         page: "home",
-        userType: (0, Util_1.UserDisplayName)(req),
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.get("/gallery", function (req, res, next) {
     res.render("index", {
         title: "Gallery",
         page: "gallery",
-        userType: (0, Util_1.UserDisplayName)(req),
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.get("/rooms", function (req, res, next) {
     res.render("index", {
         title: "Room",
         page: "rooms",
-        userType: (0, Util_1.UserDisplayName)(req),
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.get("/login", function (req, res, next) {
@@ -45,6 +49,7 @@ router.get("/login", function (req, res, next) {
             page: "login",
             userType: "",
             messages: req.flash("loginMessage"),
+            emailaddress: (0, Util_1.FindEmailAddress)(req),
         });
     }
     return res.redirect("/");
@@ -77,7 +82,12 @@ router.post("/login", function (req, res, next) {
                 res.end(err);
             }
             const userType = user.userType;
-            res.render("index", { title: "Home", page: "home", userType: userType });
+            res.render("index", {
+                title: "Home",
+                page: "home",
+                userType: userType,
+                emailaddress: (0, Util_1.FindEmailAddress)(req),
+            });
         });
     })(req, res, next);
 });
@@ -85,16 +95,18 @@ router.get("/reservation", function (req, res, next) {
     res.render("index", {
         title: "Reservations",
         page: "reservation",
-        userType: (0, Util_1.UserDisplayName)(req),
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.get("/employee-register", function (req, res, next) {
-    if (!req.user) {
+    if (req.user) {
         res.render("index", {
-            title: "Employee Registration ",
+            title: "Employee Registration",
             page: "employee-register",
-            userType: "",
+            userType: (0, Util_1.UserSecurityLevel)(req),
             messages: req.flash("registerMessage"),
+            emailaddress: (0, Util_1.FindEmailAddress)(req),
         });
     }
     return res.redirect("/");
@@ -128,15 +140,13 @@ router.post("/employee-register", function (req, res, next) {
     });
 });
 router.get("/register", function (req, res, next) {
-    if (!req.user) {
-        res.render("index", {
-            title: "Guest Registration ",
-            page: "register",
-            userType: (0, Util_1.UserDisplayName)(req),
-            messages: "",
-        });
-    }
-    return res.redirect("/");
+    res.render("index", {
+        title: "Guest Registration ",
+        page: "register",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        messages: "",
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
+    });
 });
 router.post("/register", async (req, res, next) => {
     {
@@ -175,13 +185,19 @@ router.post("/register", async (req, res, next) => {
 });
 router.get("/reservation-list", async (req, res, next) => {
     try {
-        const reservationsCollection = await reservation_1.default.find({}).exec();
-        res.render("index", {
-            title: "Reservation List",
-            page: "reservation-list",
-            userType: "",
-            reservations: reservationsCollection,
-        });
+        if (req.user) {
+            const reservationsCollection = await reservation_1.default.find({}).exec();
+            res.render("index", {
+                title: "Reservation List",
+                page: "reservation-list",
+                userType: (0, Util_1.UserSecurityLevel)(req),
+                reservations: reservationsCollection,
+                emailaddress: (0, Util_1.FindEmailAddress)(req),
+            });
+        }
+        else {
+            return res.redirect("/");
+        }
     }
     catch (error) {
         console.error(error);
@@ -193,10 +209,12 @@ router.get("/reservation-add", function (req, res, next) {
         title: "Add",
         page: "reservation-add",
         reservation: "",
-        userType: "",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
 router.post("/reservation", async function (req, res, next) {
+    console.log(`EmailAddress: ${req.body.emailAddress}`);
     try {
         let firstName = req.body.inputReservationFirstName;
         let lastName = req.body.inputReservationLastName;
@@ -251,6 +269,8 @@ router.post("/reservation", async function (req, res, next) {
         if (!conflictFound) {
             let newReservation = new reservation_1.default({
                 ReservationID: reservationId,
+                GuestFirstName: firstName,
+                GuestLastName: lastName,
                 ReservationStartDate: reservationStartDate,
                 ReservationEndDate: reservationEndDate,
                 NumberOfGuests: numberOfGuests,
@@ -268,7 +288,7 @@ router.post("/reservation", async function (req, res, next) {
             });
             await newReservation.save();
         }
-        res.redirect("/reservation-list");
+        res.redirect("/");
     }
     catch (error) {
         console.log(error);
@@ -330,6 +350,8 @@ router.post("/reservation-add", async function (req, res, next) {
         if (!conflictFound) {
             let newReservation = new reservation_1.default({
                 ReservationID: reservationId,
+                GuestFirstName: firstName,
+                GuestLastName: lastName,
                 ReservationStartDate: reservationStartDate,
                 ReservationEndDate: reservationEndDate,
                 NumberOfGuests: numberOfGuests,
@@ -409,7 +431,8 @@ router.get("/reservation-edit/:EmailAddress", async (req, res, next) => {
             title: "Edit",
             page: "reservation-edit",
             reservation: reservation,
-            userType: "",
+            userType: (0, Util_1.UserSecurityLevel)(req),
+            emailaddress: (0, Util_1.FindEmailAddress)(req),
         });
     }
     catch (err) {

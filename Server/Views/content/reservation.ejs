@@ -1,15 +1,8 @@
 <!-- <div class="hero-text-box"> -->
 <h1 class="primary-heading"><i class="fa-solid fa-hotel"></i> Reservations</h1>
 <div class="row justify-content-lg-center g-3">
-  <form class="row g-3">
-    <div class="col-12">
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="gridCheck" />
-        <label class="form-check-label" for="gridCheck">
-          Are you the guest?
-        </label>
-      </div>
-    </div>
+  <form method="POST" class="row g-3">
+    <div class="col-12"></div>
     <div class="col-md-6">
       <label for="inputReservationFirstName" class="form-label"
         >Guest First Name
@@ -19,6 +12,7 @@
         placeholder="First Name"
         class="form-control"
         id="inputReservationFirstName"
+        name="inputReservationFirstName"
       />
     </div>
 
@@ -31,6 +25,7 @@
         placeholder="Last Name"
         class="form-control"
         id="inputReservationLastName"
+        name="inputReservationLastName"
       />
     </div>
     <div class="col-10">
@@ -40,6 +35,7 @@
         class="form-control"
         id="inputAddress"
         placeholder="1234 Main St"
+        name="inputAddress"
       />
     </div>
     <div class="col-2">
@@ -51,54 +47,82 @@
         class="form-control"
         id="inputUnitNumber"
         placeholder="Unit 200"
+        name="inputUnitNumber"
       />
     </div>
-    <div class="col-md-6">
+    <div class="col-5">
+      <label for="inputEmailAddress" class="form-label">Email Address</label>
+      <input
+        name="inputEmailAddress"
+        value="<%= emailaddress%>"
+        type="text"
+        class="form-control"
+        id="inputEmailAddress"
+      />
+    </div>
+    <div class="col-md-2">
       <label for="inputCity" class="form-label">Billing City</label>
-      <input type="text" class="form-control" id="inputCity" />
+      <input name="inputCity" type="text" class="form-control" id="inputCity" />
     </div>
     <div class="col-md-2">
       <label for="inputProvince" class="form-label">Billing Province</label>
-      <select id="inputProvince" class="form-select">
-        <option selected>Alberta</option>
-        <option>British Columbia</option>
-        <option>Manitoba</option>
-        <option>New Brunswick</option>
-        <option>Newfoundland and Labrador</option>
-        <option>Northwest Territories</option>
-        <option>Nova Scotia</option>
-        <option>Nunavut</option>
-        <option>Ontario</option>
-        <option>Prince Edward Island</option>
-        <option>Quebec</option>
-        <option>Saskatchewan</option>
-        <option>Yukon</option>
+      <select name="inputProvince" id="inputProvince" class="form-select">
+        <option value="Alberta" selected>Alberta</option>
+        <option value="British Columbia">British Columbia</option>
+        <option value="Manitoba">Manitoba</option>
+        <option value="New Brunswick">New Brunswick</option>
+        <option value="Newfoundland and Labrador">
+          Newfoundland and Labrador
+        </option>
+        <option value="Northwest Territories">Northwest Territories</option>
+        <option value="Nova Scotia">Nova Scotia</option>
+        <option value="Nunavut">Nunavut</option>
+        <option value="Ontario">Ontario</option>
+        <option value="Prince Edward Island">Prince Edward Island</option>
+        <option value="Quebec">Quebec</option>
+        <option value="Saskatchewan">Saskatchewan</option>
+        <option value="Yukon">Yukon</option>
       </select>
     </div>
     <div class="col-md-2">
       <label for="inputCountry" class="form-label">Country</label>
-      <select id="inputCountry" class="form-select">
-        <option selected>Canada</option>
+      <select name="inputCountry" id="inputCountry" class="form-select">
+        <option value="Canada" selected>Canada</option>
       </select>
     </div>
-    <div class="col-md-2">
+    <div class="col-md-1">
       <label for="inputPostalCode" class="form-label"
         >Billing Postal Code</label
       >
-      <input type="text" class="form-control" id="inputPostalCode" />
+      <input
+        type="text"
+        name="inputPostalCode"
+        class="form-control"
+        id="inputPostalCode"
+      />
     </div>
 
     <div class="col-md-3">
       <label for="inputCheckInDate" class="form-label">Check In Date:</label>
-      <input type="date" class="form-control" id="inputCheckInDate" />
+      <input
+        name="inputCheckInDate"
+        type="date"
+        class="form-control"
+        id="inputCheckInDate"
+      />
     </div>
     <div class="col-md-3">
       <label for="inputCheckOutDate" class="form-label">Check Out Date:</label>
-      <input type="date" class="form-control" id="inputCheckOutDate" />
+      <input
+        type="date"
+        name="inputCheckOutDate"
+        class="form-control"
+        id="inputCheckOutDate"
+      />
     </div>
     <div class="col-md-2">
       <label for="inputPax" class="form-label">Number of Guests</label>
-      <select id="inputPax" class="form-select">
+      <select name="inputPax" id="inputPax" class="form-select">
         <option>1</option>
         <option selected>2</option>
       </select>
@@ -106,29 +130,25 @@
     <div class="col-md-4">
       <label for="inputRoomType" class="form-label">Room Type:</label>
       <select id="inputRoomType" class="form-select">
-        <option>Twin Room with Beach View</option>
-        <option selected>Double Room with Beach View</option>
-        <option>Queen Room with Balcony & Beach View</option>
-        <option>King Ensuite with Balcony & Beach View</option>
+        <option value="TWN ROOM">Twin Room with Beach View</option>
+        <option value="DBL ROOM" selected>Double Room with Beach View</option>
+        <option value="QUEEN ROOM">Queen Room with Balcony & Beach View</option>
+        <option value="KING ROOM">
+          King Ensuite with Balcony & Beach View
+        </option>
       </select>
     </div>
-    <!-- <div class="col-12">
-            <div class="form-check">
-              <input
-                class="form-check-input"
-                type="checkbox"
-                id="billingAddressCheck"
-              />
-              <label class="form-check-label" for="billingAddressCheck">
-                Is the mailing address the same as the billing address entered
-                above?
-              </label>
-            </div>
-          </div> -->
+    <div>
+      <p><% emailaddress %></p>
+    </div>
+    <div class="col-12">
+      <button type="submit" class="btn btn-primary" id="addButton">
+        Create Booking
+      </button>
+      <button id="cancelButton" type="cancel" class="btn btn-primary">
+        <i class="fas fa-sign-in-alt"></i>
+        Cancel
+      </button>
+    </div>
   </form>
-  <div class="col-12">
-    <button type="submit" class="btn btn-primary" id="createBooking">
-      Create Booking
-    </button>
-  </div>
 </div>

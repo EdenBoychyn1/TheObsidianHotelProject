@@ -9,7 +9,7 @@
       </label>
       <input
         name="inputReservationFirstName"
-        value=" <%= reservation[0].guest[0].FirstName %>"
+        value=" <%= reservation[0].GuestFirstName %>"
         type="text"
         placeholder="First Name"
         class="form-control"
@@ -23,7 +23,7 @@
       >
       <input
         name="inputReservationLastName"
-        value=" <%= reservation[0].guest[0].LastName %>"
+        value=" <%= reservation[0].GuestLastName %>"
         type="text"
         placeholder="Last Name"
         class="form-control"
@@ -49,7 +49,6 @@
         type="text"
         class="form-control"
         id="inputUnitNumber"
-        placeholder="Unit 200"
       />
     </div>
     <div class="col-md-6">
@@ -65,11 +64,14 @@
     <div class="col-md-2">
       <label for="inputProvince" class="form-label">Province</label>
       <select name="inputProvince" id="inputProvince" class="form-select">
-        <option value="Alberta"></option>Alberta</option> 
+        <option selected><%= reservation[0].BillingProvince %></option>
+        <option value="Alberta">Alberta</option>
         <option value="British Columbia">British Columbia</option>
         <option value="Manitoba">Manitoba</option>
         <option value="New Brunswick">New Brunswick</option>
-        <option value="Newfoundland and Labrador">Newfoundland and Labrador</option>
+        <option value="Newfoundland and Labrador">
+          Newfoundland and Labrador
+        </option>
         <option value="Northwest Territories">Northwest Territories</option>
         <option value="Nova Scotia">Nova Scotia</option>
         <option value="Nunavut">Nunavut</option>

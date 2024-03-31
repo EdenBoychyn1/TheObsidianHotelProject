@@ -30,7 +30,15 @@
       <li class="nav-item">
         <a class="nav-link" href="/gallery">Gallery</a>
       </li>
-      <% if(userType) { %>
+
+      <% if(userType === "employee") { %>
+      <li class="nav-item">
+        <a class="nav-link" href="/employee-register">Employee Register</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/reservation-list">Reservations List</a>
+      </li>
+      <% } %> <% if(userType) { %>
       <li class="nav-item">
         <a class="nav-link" href="/logout">Logout</a>
       </li>
@@ -39,10 +47,11 @@
         <a class="nav-link" href="/login">Login</a>
       </li>
       <% } %>
-
       <li class="nav-item">
         <a class="nav-link" href="/register">Register</a>
       </li>
-    </ul>
+      <li class="nav-item">
+        <a class="nav-link" href="#"><%= emailaddress %></a>
+      </li>
   </div>
 </nav>

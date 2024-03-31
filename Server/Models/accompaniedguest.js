@@ -30,4 +30,4 @@ const AccompaniedGuestSchema = new Schema({
 AccompaniedGuestSchema.plugin(passport_local_mongoose_1.default);
 const Model = mongoose_1.default.model("Guest", AccompaniedGuestSchema);
 exports.default = Model;
-//# sourceMappingURL=guest.js.map
+//# sourceMappingURL=accompaniedguest.js.map
