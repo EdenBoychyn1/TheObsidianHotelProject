@@ -251,7 +251,7 @@ router.post("/reservation", async function (req, res, next) {
         let numberOfGuests = req.body.inputPax;
         let roomType = req.body.inputRoomType;
         let reservationId = req.body.inputReservationLastName + Date.now();
-        let emailAddress = req.body.inputEmailAddress;
+        let emailAddress = (0, Util_1.FindEmailAddress)(req);
         let address = req.body.inputAddress;
         let addressSplit = address.split(" ");
         let streetNumber = addressSplit[0];
