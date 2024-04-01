@@ -35,11 +35,11 @@ const app = express();
 import * as DBConfig from "./db";
 
 // Connect to the NoSQL DB by using the connection method and inputting the LocalURI string
-mongoose.connect(DBConfig.LocalURI);
+mongoose.connect(DBConfig.RemoteURI);
 //Alias for mongoose connection
 const db = mongoose.connection; //
 db.on("error", function () {
-  console.error(`Connection Error! ${DBConfig.LocalURI}`);
+  console.error(`Connection Error! ${DBConfig.RemoteURI}`);
 });
 db.once("open", function () {
   console.log(`Connection to MongoDB at ${DBConfig.HostName}`);

@@ -145,8 +145,9 @@
       <div class="col-md-4">
         <label for="inputRoomType" class="form-label">Room Type:</label>
         <select name="inputRoomType" id="inputRoomType" class="form-select">
+          <option selected><%= reservation[0].RoomType %></option>
           <option value="TWN ROOM">Twin Room with Beach View</option>
-          <option value="DBL ROOM" selected>Double Room with Beach View</option>
+          <option value="DBL ROOM">Double Room with Beach View</option>
           <option value="QUEEN ROOM">
             Queen Room with Balcony & Beach View
           </option>
