@@ -43,23 +43,20 @@ router.get("/rooms", function (req, res, next) {
     });
 });
 router.get("/login", function (req, res, next) {
-    if (!req.user) {
-        res.render("index", {
-            title: "Login",
-            page: "login",
-            userType: "",
-            messages: req.flash("loginMessage"),
-            emailaddress: "",
-        });
-    }
-    return res.redirect("/");
+    res.render("index", {
+        title: "Login",
+        page: "login",
+        userType: "",
+        messages: req.flash("loginMessage"),
+        emailaddress: "",
+    });
 });
 router.get("/logout", function (req, res, next) {
     req.logout(function (err) {
         if (err) {
             return next(err);
         }
-        res.redirect("/login");
+        return res.redirect("/login");
     });
 });
 router.post("/login", function (req, res, next) {
@@ -82,12 +79,7 @@ router.post("/login", function (req, res, next) {
                 res.end(err);
             }
             const userType = user.userType;
-            return res.render("index", {
-                title: "Home",
-                page: "home",
-                userType: userType,
-                emailaddress: (0, Util_1.FindEmailAddress)(req),
-            });
+            return res.redirect("/");
         });
     })(req, res, next);
 });
@@ -419,7 +411,6 @@ router.post("/reservation-add", async function (req, res, next) {
                     break;
                 }
             }
-            console.log(`Conflict: ${conflictFound}`);
             if (conflictFound === false) {
                 let newReservation = new reservation_1.default({
                     ReservationID: reservationId,
@@ -442,6 +433,10 @@ router.post("/reservation-add", async function (req, res, next) {
                 });
                 await newReservation.save();
                 return res.redirect("/reservation-list");
+            }
+            else if (conflictFound === true) {
+                req.flash("registerMessage", "No rooms for the room type selected are available for the dates that you have entered.");
+                return res.redirect("/reservation-add");
             }
         }
     }
