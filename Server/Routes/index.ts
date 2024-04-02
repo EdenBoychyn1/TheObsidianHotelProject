@@ -77,6 +77,7 @@ router.post("/login", function (req, res, next) {
       res.end(err);
     }
 
+    console.log("edede");
     if (!user) {
       console.log("Hello3");
       console.log(`user ${user}`);
