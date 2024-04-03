@@ -125,12 +125,11 @@ router.get("/employee-register", function (req, res, next) {
 router.post(
   "/employee-register",
   function (
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
+    req: express.Request /*********************Line 128 was modified from Tom Tsiliopoulos***********************/,
+    res: express.Response /*********************Line 129 was modified from Tom Tsiliopoulos***********************/,
+    next: express.NextFunction /*********************Line 130 was modified from Tom Tsiliopoulos***********************/
   ) {
     let newEmployee = new User({
-      // Why lowercase username and why is everything else uppercase;
       FirstName: req.body.firstName,
       LastName: req.body.lastName,
       username: req.body.emailAddress,
@@ -142,6 +141,7 @@ router.post(
     User.register(newEmployee, req.body.password, function (err: any) {
       if (err) {
         if (err.name == "UserExistsError") {
+          /*********************Line 144 was modified from Tom Tsiliopoulos; he added "Error" to the end of UserExistsError***********************/
           console.error("ERROR: User already exists!\n");
           req.flash("registerMessage", "ERROR: this Employee already exists!");
         } else if (err.name == "MissingUsernameError") {
@@ -157,6 +157,7 @@ router.post(
             "ERROR: You must enter a temporary password for the employee!"
           );
         } else {
+          /*************************************Line 160 was added by Tom Tsiliopoulos; just the "else" clause*********************/
           console.error(err.name); // Other error
           req.flash(
             "registerMessage",
@@ -164,8 +165,18 @@ router.post(
           );
         }
 
-        return res.redirect("/employee-register");
+        return res.redirect(
+          "/employee-register"
+        ); /*************************************Line 169 was added by Tom Tsiliopoulos*********************/
       }
+
+      /*************************************Line 175 to Line 181 was added by Tom Tsiliopoulos; but I (Eden Boychyn) removed it*********************/
+      // return passport.authenticate('local')(req, res, function()
+      // {
+      //   console.log("in auth function")
+
+      //     return res.redirect('/reservation-list');
+      // });
 
       return res.redirect("/reservation-list");
     });
@@ -320,7 +331,6 @@ router.get("/reservation-add", function (req, res, next) {
 router.post("/reservation", async function (req, res, next) {
   try {
     let UserType = UserSecurityLevel(req);
-
     let firstName = req.body.inputReservationFirstName;
     let lastName = req.body.inputReservationLastName;
     let unitNumber = req.body.inputUnitNumber;
@@ -339,6 +349,17 @@ router.post("/reservation", async function (req, res, next) {
     let streetNumber = addressSplit[0];
     let streetName = addressSplit[1];
 
+    for (let i = 2; i < addressSplit.length; i++) {
+      streetName += " " + addressSplit[i];
+    }
+
+    /**
+     * Finding specific rooms by room type
+     * @type {*} */
+    const roomCollection = await Room.find({
+      RoomType: roomType,
+    }).exec();
+
     if (
       firstName === "" ||
       lastName === "" ||
@@ -354,7 +375,7 @@ router.post("/reservation", async function (req, res, next) {
       address === ""
     ) {
       req.flash("registerMessage", "ERROR: Missing or incorrect information.");
-      return res.redirect("/reservation-add");
+      return res.redirect("/reservation");
     } else if (
       reservationStartDate >= reservationEndDate ||
       reservationEndDate <= reservationStartDate
@@ -363,22 +384,8 @@ router.post("/reservation", async function (req, res, next) {
         "registerMessage",
         "ERROR: Check In Date cannot be later than Check Out Date and Check Out Date cannot be earlier than Check In Date."
       );
-      return res.redirect("/reservation-add");
+      return res.redirect("/reservation");
     } else {
-      for (let i = 2; i < addressSplit.length; i++) {
-        streetName += " " + addressSplit[i];
-      }
-
-      /**
-       * Finding specific rooms by room type
-       * @type {*} */
-      const roomCollection = await Room.find({
-        RoomType: roomType,
-      }).exec();
-
-      let conflictFound = false;
-
-      let newRoomNumber;
       /**
        *  Looping through rooms array
        */
@@ -389,67 +396,64 @@ router.post("/reservation", async function (req, res, next) {
           RoomNumber: roomCollection[index].RoomNumber,
         });
 
-        console.log(`Room Collection Length ${roomCollection.length}`);
-
-        for (let j = 0; j < reservation.length; j++) {
-          const documentsReservationStartDate =
-            reservation[j].ReservationStartDate;
-          const documentsReservationEndDate = reservation[j].ReservationEndDate;
-
+        let conflictFound = false;
+        for (let i = 0; i < reservation.length; i++) {
+          const existingReservation = reservation[i];
           console.log(
-            `Proposed Reservation Start Date: ${reservationStartDate}, Reservation Start Date of already Created Reservation ${documentsReservationStartDate}`
+            `Reservation Start Date: ${existingReservation.ReservationStartDate}`
           );
 
-          console.log(`Reservation Length ${reservation.length}`);
-          console.log(`Reservation: ${reservation[index]}`);
           if (
-            reservationStartDate === documentsReservationStartDate ||
-            reservationEndDate === documentsReservationEndDate
+            (reservationStartDate >= existingReservation.ReservationStartDate &&
+              reservationStartDate < existingReservation.ReservationEndDate) ||
+            (reservationEndDate > existingReservation.ReservationStartDate &&
+              reservationEndDate <= existingReservation.ReservationEndDate) ||
+            (reservationStartDate <= existingReservation.ReservationStartDate &&
+              reservationEndDate >= existingReservation.ReservationEndDate)
           ) {
-            console.log("Reservation conflicts with an existing reservation");
+            console.log("Conflict found!");
             conflictFound = true;
+            break; // Exit the loop if conflict found
           }
         }
 
-        if (conflictFound) {
-          console.log(`Conflict Found ${conflictFound}`);
-          // break;
-        } else {
-          newRoomNumber = roomCollection[index].RoomNumber;
+        if (conflictFound === false) {
+          let newReservation = new Reservation({
+            ReservationID: reservationId,
+            GuestFirstName: firstName,
+            GuestLastName: lastName,
+            ReservationStartDate: reservationStartDate,
+            ReservationEndDate: reservationEndDate,
+            NumberOfGuests: numberOfGuests,
+            RoomNumber: roomCollection[index].RoomNumber,
+            RoomType: roomType,
+            RoomStatus: "Reserved",
+            BillingUnitNumber: unitNumber,
+            BillingStreetNumber: streetNumber,
+            BillingStreetName: streetName,
+            BillingCity: city,
+            BillingProvince: province,
+            BillingCountry: country,
+            BillingPostalCode: postalCode,
+            EmailAddress: emailAddress,
+          });
+
+          // Save the new reservation
+          await newReservation.save();
+
+          if (UserType === "employee") {
+            return res.redirect("/reservation-list");
+          } else if (UserType === "guest") {
+            return res.redirect("/guest-reservation");
+          }
+        } else if (conflictFound === true) {
+          req.flash(
+            "registerMessage",
+            "ERROR: No rooms for the room type selected are available for the dates that you have entered."
+          );
+          return res.redirect("/reservation");
         }
       }
-
-      if (!conflictFound) {
-        // If no conflict is found, proceed with creating the new reservation
-        let newReservation = new Reservation({
-          ReservationID: reservationId,
-          GuestFirstName: firstName,
-          GuestLastName: lastName,
-          ReservationStartDate: reservationStartDate,
-          ReservationEndDate: reservationEndDate,
-          NumberOfGuests: numberOfGuests,
-          RoomNumber: newRoomNumber,
-          RoomType: roomType,
-          RoomStatus: "Reserved",
-          BillingUnitNumber: unitNumber,
-          BillingStreetNumber: streetNumber,
-          BillingStreetName: streetName,
-          BillingCity: city,
-          BillingProvince: province,
-          BillingCountry: country,
-          BillingPostalCode: postalCode,
-          EmailAddress: emailAddress,
-        });
-
-        // Save the new reservation
-        await newReservation.save();
-      }
-
-      if (UserType === "employee") {
-        return res.redirect("/reservation-list");
-      }
-
-      return res.redirect("/");
     }
   } catch (error) {
     console.log(error);
@@ -622,67 +626,94 @@ router.post("/reservation-add", async function (req, res, next) {
       RoomType: roomType,
     }).exec();
 
-    /**
-     *  Looping through rooms array
-     */
-    for (let index = 0; index < roomCollection.length; index++) {
-      console.log(`Room Number: ${roomCollection[index].RoomNumber}`);
+    if (
+      firstName === "" ||
+      lastName === "" ||
+      city === "" ||
+      province === "" ||
+      country === "" ||
+      postalCode === "" ||
+      reservationStartDate === "" ||
+      reservationEndDate === "" ||
+      numberOfGuests === "" ||
+      roomType === "" ||
+      emailAddress === "" ||
+      address === ""
+    ) {
+      req.flash("registerMessage", "ERROR: Missing or incorrect information.");
+      return res.redirect("/reservation");
+    } else if (
+      reservationStartDate >= reservationEndDate ||
+      reservationEndDate <= reservationStartDate
+    ) {
+      req.flash(
+        "registerMessage",
+        "ERROR: Check In Date cannot be later than Check Out Date and Check Out Date cannot be earlier than Check In Date."
+      );
+      return res.redirect("/reservation");
+    } else {
+      /**
+       *  Looping through rooms array
+       */
+      for (let index = 0; index < roomCollection.length; index++) {
+        console.log(`Room Number: ${roomCollection[index].RoomNumber}`);
 
-      const reservation = await Reservation.find({
-        RoomNumber: roomCollection[index].RoomNumber,
-      });
-
-      let conflictFound = false;
-      for (let i = 0; i < reservation.length; i++) {
-        const existingReservation = reservation[i];
-        console.log(
-          `Reservation Start Date: ${existingReservation.ReservationStartDate}`
-        );
-
-        if (
-          (reservationStartDate >= existingReservation.ReservationStartDate &&
-            reservationStartDate < existingReservation.ReservationEndDate) ||
-          (reservationEndDate > existingReservation.ReservationStartDate &&
-            reservationEndDate <= existingReservation.ReservationEndDate) ||
-          (reservationStartDate <= existingReservation.ReservationStartDate &&
-            reservationEndDate >= existingReservation.ReservationEndDate)
-        ) {
-          console.log("Conflict found!");
-          conflictFound = true;
-          break; // Exit the loop if conflict found
-        }
-      }
-
-      if (conflictFound === false) {
-        let newReservation = new Reservation({
-          ReservationID: reservationId,
-          GuestFirstName: firstName,
-          GuestLastName: lastName,
-          ReservationStartDate: reservationStartDate,
-          ReservationEndDate: reservationEndDate,
-          NumberOfGuests: numberOfGuests,
+        const reservation = await Reservation.find({
           RoomNumber: roomCollection[index].RoomNumber,
-          RoomType: roomType,
-          RoomStatus: "Reserved",
-          BillingUnitNumber: unitNumber,
-          BillingStreetNumber: streetNumber,
-          BillingStreetName: streetName,
-          BillingCity: city,
-          BillingProvince: province,
-          BillingCountry: country,
-          BillingPostalCode: postalCode,
-          EmailAddress: emailAddress,
         });
 
-        // Save the new reservation
-        await newReservation.save();
-        return res.redirect("/reservation-list");
-      } else if (conflictFound === true) {
-        req.flash(
-          "registerMessage",
-          "No rooms for the room type selected are available for the dates that you have entered."
-        );
-        return res.redirect("/reservation-add");
+        let conflictFound = false;
+        for (let i = 0; i < reservation.length; i++) {
+          const existingReservation = reservation[i];
+          console.log(
+            `Reservation Start Date: ${existingReservation.ReservationStartDate}`
+          );
+
+          if (
+            (reservationStartDate >= existingReservation.ReservationStartDate &&
+              reservationStartDate < existingReservation.ReservationEndDate) ||
+            (reservationEndDate > existingReservation.ReservationStartDate &&
+              reservationEndDate <= existingReservation.ReservationEndDate) ||
+            (reservationStartDate <= existingReservation.ReservationStartDate &&
+              reservationEndDate >= existingReservation.ReservationEndDate)
+          ) {
+            console.log("Conflict found!");
+            conflictFound = true;
+            break; // Exit the loop if conflict found
+          }
+        }
+
+        if (conflictFound === false) {
+          let newReservation = new Reservation({
+            ReservationID: reservationId,
+            GuestFirstName: firstName,
+            GuestLastName: lastName,
+            ReservationStartDate: reservationStartDate,
+            ReservationEndDate: reservationEndDate,
+            NumberOfGuests: numberOfGuests,
+            RoomNumber: roomCollection[index].RoomNumber,
+            RoomType: roomType,
+            RoomStatus: "Reserved",
+            BillingUnitNumber: unitNumber,
+            BillingStreetNumber: streetNumber,
+            BillingStreetName: streetName,
+            BillingCity: city,
+            BillingProvince: province,
+            BillingCountry: country,
+            BillingPostalCode: postalCode,
+            EmailAddress: emailAddress,
+          });
+
+          // Save the new reservation
+          await newReservation.save();
+          return res.redirect("/reservation-list");
+        } else if (conflictFound === true) {
+          req.flash(
+            "registerMessage",
+            "No rooms for the room type selected are available for the dates that you have entered."
+          );
+          return res.redirect("/reservation-add");
+        }
       }
     }
   } catch (error) {

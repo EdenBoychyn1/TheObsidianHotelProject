@@ -80,7 +80,10 @@ app.use(passport.session());
 passport.use(User.createStrategy());
 
 // // Seralize and Deserialize our data
+
+/*********************Line 85 was adapted by Eden Boychyn from Tom Tsiliopoulos***********************/
 passport.serializeUser(User.serializeUser());
+
 passport.deserializeUser(User.deserializeUser());
 
 app.use("/", indexRouter);
