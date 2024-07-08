@@ -18,26 +18,27 @@ router.get("/", function (req, res, next) {
         emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
 });
-router.get("/home", function (req, res, next) {
+router.get("/rooms", function (req, res, next) {
     res.render("index", {
-        title: "Home",
-        page: "home",
+        title: "Room",
+        page: "rooms",
         userType: (0, Util_1.UserSecurityLevel)(req),
         emailaddress: (0, Util_1.FindEmailAddress)(req),
+    });
+});
+router.get("/reservation", function (req, res, next) {
+    res.render("index", {
+        title: "Reservations",
+        page: "reservation",
+        userType: (0, Util_1.UserSecurityLevel)(req),
+        emailaddress: (0, Util_1.FindEmailAddress)(req),
+        messages: req.flash("registerMessage"),
     });
 });
 router.get("/gallery", function (req, res, next) {
     res.render("index", {
         title: "Gallery",
         page: "gallery",
-        userType: (0, Util_1.UserSecurityLevel)(req),
-        emailaddress: (0, Util_1.FindEmailAddress)(req),
-    });
-});
-router.get("/rooms", function (req, res, next) {
-    res.render("index", {
-        title: "Room",
-        page: "rooms",
         userType: (0, Util_1.UserSecurityLevel)(req),
         emailaddress: (0, Util_1.FindEmailAddress)(req),
     });
@@ -51,25 +52,13 @@ router.get("/login", function (req, res, next) {
         emailaddress: "",
     });
 });
-router.get("/logout", function (req, res, next) {
-    req.logout(function (err) {
-        if (err) {
-            return next(err);
-        }
-        return res.redirect("/login");
-    });
-});
 router.post("/login", function (req, res, next) {
-    console.log("Hello");
     passport_1.default.authenticate("local", function (err, user, info) {
         if (err) {
-            console.log("Hello1");
             console.error(err);
             res.end(err);
         }
-        console.log("edede");
         if (!user) {
-            console.log("Hello3");
             console.log(`user ${user}`);
             req.flash("loginMessage", "Authentication Error");
             return res.redirect("/login");
@@ -84,13 +73,12 @@ router.post("/login", function (req, res, next) {
         });
     })(req, res, next);
 });
-router.get("/reservation", function (req, res, next) {
-    res.render("index", {
-        title: "Reservations",
-        page: "reservation",
-        userType: (0, Util_1.UserSecurityLevel)(req),
-        emailaddress: (0, Util_1.FindEmailAddress)(req),
-        messages: req.flash("registerMessage"),
+router.get("/logout", function (req, res, next) {
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        return res.redirect("/login");
     });
 });
 router.get("/employee-register", function (req, res, next) {
