@@ -76,12 +76,11 @@ app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 
-// // Implement an Auth Strategy
+//Implement an Auth Strategy
 passport.use(User.createStrategy());
 
-// // Seralize and Deserialize our data
-
 /*********************Line 85 was adapted by Eden Boychyn from Tom Tsiliopoulos***********************/
+//Seralize and Deserialize our data
 passport.serializeUser(User.serializeUser());
 
 passport.deserializeUser(User.deserializeUser());

@@ -159,9 +159,26 @@
         <button type="submit" class="btn btn-primary" id="addButton">
           Create Booking
         </button>
-        <button id="cancelButton" type="cancel" class="btn btn-primary">
-          <i class="fas fa-sign-in-alt"></i>
-          Cancel
+        <button id="cancelButton" type="reset" class="btn btn-primary">
+          <% if(userType === "employee") { %>
+          <a
+            href="/reservation-list"
+            type="button"
+            class="btn btn-warning"
+            id="cancelButton"
+          >
+            Cancel
+          </a>
+          <% } else if (userType === "guest") { %>
+          <a
+            href="/guest-reservation"
+            type="button"
+            class="btn btn-warning"
+            id="cancelButton"
+          >
+            Cancel
+          </a>
+          <% } %>
         </button>
       </div>
     </form>
