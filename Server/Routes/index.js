@@ -250,6 +250,8 @@ router.get("/reservation-add", function (req, res, next) {
 });
 router.post("/reservation", async function (req, res, next) {
     try {
+        console.log((0, Util_1.StreetNumber)(req));
+        console.log((0, Util_1.StreetName)(req));
         let UserType = (0, Util_1.UserSecurityLevel)(req);
         let firstName = req.body.inputReservationFirstName;
         let lastName = req.body.inputReservationLastName;
@@ -264,13 +266,6 @@ router.post("/reservation", async function (req, res, next) {
         let roomType = req.body.inputRoomType;
         let reservationId = req.body.inputReservationLastName + Date.now();
         let emailAddress = req.body.inputEmailAddress;
-        let address = req.body.inputAddress;
-        let addressSplit = address.split(" ");
-        let streetNumber = addressSplit[0];
-        let streetName = addressSplit[1];
-        for (let i = 2; i < addressSplit.length; i++) {
-            streetName += " " + addressSplit[i];
-        }
         const roomCollection = await room_1.default.find({
             RoomType: roomType,
         }).exec();
@@ -284,8 +279,7 @@ router.post("/reservation", async function (req, res, next) {
             reservationEndDate === "" ||
             numberOfGuests === "" ||
             roomType === "" ||
-            emailAddress === "" ||
-            address === "") {
+            emailAddress === "") {
             req.flash("registerMessage", "ERROR: Missing or incorrect information.");
             return res.redirect("/reservation");
         }
@@ -327,8 +321,8 @@ router.post("/reservation", async function (req, res, next) {
                         RoomType: roomType,
                         RoomStatus: "Reserved",
                         BillingUnitNumber: unitNumber,
-                        BillingStreetNumber: streetNumber,
-                        BillingStreetName: streetName,
+                        BillingStreetNumber: (0, Util_1.StreetNumber)(req),
+                        BillingStreetName: (0, Util_1.StreetName)(req),
                         BillingCity: city,
                         BillingProvince: province,
                         BillingCountry: country,

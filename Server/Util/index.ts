@@ -19,6 +19,32 @@ export function FindEmailAddress(req: Request): string {
   }
 }
 
+export function StreetNumber(req: Request): string {
+  let address = req.body.inputAddress.split(" ");
+
+  let streetNumber;
+
+  if (address != null) {
+    streetNumber = address[0];
+  }
+  return streetNumber;
+}
+
+export function StreetName(req: Request): string {
+  let address = req.body.inputAddress.split(" ");
+
+  let streetName;
+
+  if (address != null) {
+    streetName = address[1];
+
+    for (let i = 2; i < address.length; i++) {
+      streetName += " " + address[i];
+    }
+  }
+  return streetName;
+}
+
 // custom authentication guard middleware
 export function AuthGuard(
   req: Request,
